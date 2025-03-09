@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'iciel-crocante';
+  src: url('./assets/fonts/iciel-crocante.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
