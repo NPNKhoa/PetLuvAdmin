@@ -1,6 +1,6 @@
 class ApiService {
   constructor(baseUrl = import.meta.env.VITE_API_BASE_URL) {
-    this.baseUrl = baseUrl || 'http://localhost:5000/api';
+    this.baseUrl = baseUrl || 'http://localhost:5000/api/';
     this.tokenKey = 'token';
   }
 
@@ -49,6 +49,10 @@ class ApiService {
 
       return data;
     } catch (error) {
+      if (error instanceof TypeError) {
+        throw new Error('Lỗi mạng! Vui lòng thử lại sau!');
+      }
+
       console.error('API error:', error);
       // throw error;
     }

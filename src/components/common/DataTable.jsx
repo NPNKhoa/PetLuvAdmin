@@ -1,17 +1,18 @@
 import { useState } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Box, TextField } from '@mui/material';
+import { viVN } from '@mui/x-data-grid/locales';
 
 const DataTable = ({
   columns,
   rows,
+  handleRowSelection,
   pageSize = 10,
   checkboxSelection = true,
   disableSelectionOnClick = false,
   autoHeight = true,
   density = 'standard',
 }) => {
-  console.log(columns);
   return (
     <Box
       sx={{
@@ -65,6 +66,15 @@ const DataTable = ({
           columnPinning: true,
           rowPinning: true,
         }}
+        onRowSelectionModelChange={handleRowSelection}
+        sx={{
+          boxShadow: 2,
+          '& .MuiDataGrid-selectedRowCount': {
+            color: 'primary.main',
+            fontWeight: 500,
+          },
+        }}
+        localeText={viVN.components.MuiDataGrid.defaultProps.localeText}
       />
     </Box>
   );
