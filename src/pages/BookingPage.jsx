@@ -1,9 +1,10 @@
 import React from 'react';
+import { BookingPageContainer } from '../components';
 
 const BookingPage = () => {
   return (
     <div>
-      <h1>BookingPage</h1>
+      <BookingPageContainer />
     </div>
   );
 };

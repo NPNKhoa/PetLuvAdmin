@@ -1,6 +1,4 @@
 import { useSpring, animated } from '@react-spring/web';
-import { Avatar, Divider } from '@mui/material';
-import { MdDashboard } from 'react-icons/md';
 import { Link, useLocation } from 'react-router-dom';
 import { MdMenu } from 'react-icons/md';
 import sidebarItems from '../../configs/sidebarItems.jsx';
@@ -19,7 +17,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   return (
     <animated.aside
       style={sidebarSpring}
-      className='bg-secondary-supper-light text-white h-screen flex flex-col p-4'
+      className='bg-primary-light text-white h-screen flex flex-col p-4'
     >
       <div
         className={`flex items-center justify-between ${
@@ -37,7 +35,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           onClick={toggleSidebar}
           className={`text-white ${isOpen ? '-mt-6' : 'ms-1'}`}
         >
-          <MdMenu size={isOpen ? 24 : 20} />
+          <MdMenu
+            size={isOpen ? 24 : 20}
+            className='hover:text-tertiary-light'
+          />
         </button>
       </div>
       <nav className='mt-10 flex flex-col gap-3 overflow-y-auto'>
@@ -45,8 +46,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           <Link
             key={index}
             to={item.path}
-            className={`flex items-center gap-3 p-4 rounded-lg hover:bg-secondary transition-all ${
-              currentPage === item.name && 'bg-primary'
+            className={`flex items-center gap-3 p-4 rounded-lg hover:bg-primary-dark transition-all ${
+              currentPage === item.name && 'bg-secondary'
             }`}
           >
             {item.icon}

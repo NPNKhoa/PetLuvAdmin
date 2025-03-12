@@ -1,16 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Box, CircularProgress, TextField } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import { getAllRooms } from '../../redux/thunks/roomThunk';
 import { Search, Add, Edit, Delete } from '@mui/icons-material';
 import DataTable from '../common/DataTable';
-import { useDispatch } from 'react-redux';
-import { deleteService, getServices } from '../../redux/thunks/serviceThunk';
-import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
-import CreateServiceFormModal from './CreateServiceFormModal';
-import { getServiceTypes } from '../../redux/thunks/serviceTypeThunk';
-import serviceService from '../../services/service.service';
-import { setSelectedService } from '../../redux/slices/serviceSlice';
-import UpdateServiceFormModal from './UpdateServiceFormModal';
+import { Box, CircularProgress, TextField } from '@mui/material';
+import CreateRoomFormModal from './CreateRoomFormModal';
+import { getRoomTypes } from '../../redux/thunks/roomTypeThunk';
 
 const columns = [
   {
@@ -21,22 +18,22 @@ const columns = [
     headerAlign: 'center',
   },
   {
-    field: 'serviceName',
-    headerName: 'Tên dịch vụ',
+    field: 'roomName',
+    headerName: 'Tên phòng',
     flex: 2,
     align: 'left',
     headerAlign: 'center',
   },
   {
-    field: 'serviceDesc',
+    field: 'roomDesc',
     headerName: 'Mô tả',
     flex: 3,
     align: 'left',
     headerAlign: 'center',
   },
   {
-    field: 'serviceTypeName',
-    headerName: 'Loại dịch vụ',
+    field: 'roomTypeName',
+    headerName: 'Loại phòng',
     flex: 2,
     align: 'left',
     headerAlign: 'center',
@@ -51,7 +48,7 @@ const columns = [
       return (
         <span
           className={`px-6 py-2 rounded-full text-white
-            ${params.value ? 'bg-secondary-light' : 'bg-primary-dark'}`}
+              ${params.value ? 'bg-secondary-light' : 'bg-primary-dark'}`}
         >
           {params.value ? 'Hiển thị' : 'Đã ẩn'}
         </span>
@@ -60,25 +57,25 @@ const columns = [
   },
 ];
 
-const ServicePageContainer = () => {
+const RoomPageContainer = () => {
   const dispatch = useDispatch();
 
-  const services = useSelector((state) => state.services.services);
-  const loading = useSelector((state) => state.services.loading);
+  const rooms = useSelector((state) => state.rooms.rooms);
+  const loading = useSelector((state) => state.rooms.loading);
 
-  const selectedService = useSelector(
-    (state) => state.services.selectedService
-  );
+  //   const selectedService = useSelector(
+  //     (state) => state.services.selectedService
+  //   );
 
   const rows = useMemo(() => {
-    return Array.isArray(services) && services.length !== 0
-      ? services.map((item, index) => ({
-          id: item.serviceId,
+    return Array.isArray(rooms) && rooms.length !== 0
+      ? rooms.map((item, index) => ({
+          id: item.roomId,
           index: index + 1,
           ...item,
         }))
       : [];
-  }, [services]);
+  }, [rooms]);
 
   const [searchText, setSearchText] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
@@ -103,8 +100,8 @@ const ServicePageContainer = () => {
   }, [rows, searchText]);
 
   const handleAdd = () => {
-    // Pre-fetch service type
-    dispatch(getServiceTypes());
+    // Pre-fetch room type
+    dispatch(getRoomTypes({ pageIndex: 1, pageSize: 10 }));
 
     setCreateModalOpen(true);
   };
@@ -124,8 +121,7 @@ const ServicePageContainer = () => {
       return toast.error('Vui lòng chỉ chọn 1 hàng để cập nhật');
     }
 
-    console.log(selectedRows[0]);
-    dispatch(setSelectedService(selectedRows[0]));
+    // dispatch(setSelectedService(selectedRows[0]));
     setUpdateModalOpen(true);
   };
 
@@ -133,11 +129,11 @@ const ServicePageContainer = () => {
     if (!Array.isArray(selectedRows) || selectedRows.length === 0) return;
 
     try {
-      await Promise.all(
-        selectedRows.map((serviceId) => serviceService.deleteService(serviceId))
-      );
+      //   await Promise.all(
+      //     selectedRows.map((serviceId) => serviceService.deleteService(serviceId))
+      //   );
 
-      dispatch(getServices());
+      dispatch(getAllRooms({ pageIndex: 1, pageSize: 10 }));
 
       toast.success('Xóa dịch vụ thành công!');
     } catch (error) {
@@ -147,7 +143,7 @@ const ServicePageContainer = () => {
   };
 
   useEffect(() => {
-    dispatch(getServices())
+    dispatch(getAllRooms({ pageIndex: 1, pageSize: 10 }))
       .unwrap()
       .then()
       .catch((error) => {
@@ -211,18 +207,18 @@ const ServicePageContainer = () => {
       )}
 
       {/* Modal */}
-      <CreateServiceFormModal
+      <CreateRoomFormModal
         open={createModalOpen}
         onClose={handleCloseAddModal}
       />
 
-      <UpdateServiceFormModal
+      {/* <UpdateServiceFormModal
         open={updateModalOpen}
         onClose={handleCloseUpdateModal}
         service={selectedService}
-      />
+      /> */}
     </Box>
   );
 };
 
-export default ServicePageContainer;
+export default RoomPageContainer;

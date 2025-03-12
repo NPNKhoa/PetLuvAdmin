@@ -11,7 +11,7 @@ const Router = () => {
     <BrowserRouter>
       <Suspense fallback={<LoadingPage />}>
         <Routes>
-          {router.map(({ id, path, element }) => {
+          {router?.map(({ id, path, element }) => {
             return (
               <Route
                 key={id}

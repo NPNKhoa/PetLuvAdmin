@@ -5,4 +5,16 @@ import DataTable from './common/DataTable';
 
 import ServicePageContainer from './ServicePage/ServicePageContainer';
 
-export { Router, Header, Sidebar, DataTable, ServicePageContainer };
+import RoomPageContainer from './RoomPage/RoomPageContainer';
+
+import BookingPageContainer from './BookingPage/BookingPageContainer';
+
+export {
+  Router,
+  Header,
+  Sidebar,
+  DataTable,
+  ServicePageContainer,
+  RoomPageContainer,
+  BookingPageContainer,
+};

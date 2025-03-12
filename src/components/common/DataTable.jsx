@@ -69,6 +69,7 @@ const DataTable = ({
         onRowSelectionModelChange={handleRowSelection}
         sx={{
           boxShadow: 2,
+          padding: '1rem',
           '& .MuiDataGrid-selectedRowCount': {
             color: 'primary.main',
             fontWeight: 500,

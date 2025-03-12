@@ -1,9 +1,10 @@
 import React from 'react';
+import { RoomPageContainer } from '../components';
 
 const RoomPage = () => {
   return (
     <div>
-      <h1>RoomPage</h1>
+      <RoomPageContainer />
     </div>
   );
 };

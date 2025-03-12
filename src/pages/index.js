@@ -3,10 +3,10 @@ import NotFoundPage from './common/NotFoundPage';
 
 import HomePage from './HomePage';
 import ServicePage from './ServicePage';
-import ComboPage from './common/ComboPage';
-import RoomPage from './common/RoomPage';
-import ProductPage from './common/ProductPage';
-import PetPage from './common/PetPage';
+import ComboPage from './ComboPage';
+import RoomPage from './RoomPage';
+import ProductPage from './ProductPage';
+import PetPage from './PetPage';
 import UserPage from './Userpage';
 import BookingPage from './BookingPage';
 import AuthorPage from './AuthorPage';
