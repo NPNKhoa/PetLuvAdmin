@@ -1,18 +1,40 @@
 import { useState } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { Box, TextField } from '@mui/material';
+import { Box, IconButton, TextField } from '@mui/material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { viVN } from '@mui/x-data-grid/locales';
 
 const DataTable = ({
   columns,
   rows,
   handleRowSelection,
+  onView,
   pageSize = 10,
   checkboxSelection = true,
   disableSelectionOnClick = false,
   autoHeight = true,
   density = 'standard',
 }) => {
+  const finalColumns = onView
+    ? [
+        ...columns,
+        {
+          field: 'actions',
+          headerName: 'Chức năng',
+          flex: 1.5,
+          align: 'center',
+          headerAlign: 'center',
+          renderCell: (params) => {
+            return (
+              <IconButton onClick={() => onView(params)}>
+                <VisibilityIcon className='text-secondary' />
+              </IconButton>
+            );
+          },
+        },
+      ]
+    : columns;
+
   return (
     <Box
       sx={{
@@ -31,6 +53,11 @@ const DataTable = ({
         '& .MuiDataGrid-cell': {
           color: '#333',
         },
+        '& .MuiDataGrid-row:hover': {
+          cursor: 'pointer',
+          bgcolor: '#f7aa2d !important',
+          color: '#ffffff !important',
+        },
         '& .MuiDataGrid-footerContainer': {
           backgroundColor: '#efefef',
           color: '#fff',
@@ -39,7 +66,7 @@ const DataTable = ({
     >
       <DataGrid
         rows={rows}
-        columns={columns}
+        columns={finalColumns}
         pageSizeOptions={[5, 10, 25, 50]}
         initialState={{ pagination: { paginationModel: { pageSize } } }}
         checkboxSelection={checkboxSelection}

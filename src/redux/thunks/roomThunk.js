@@ -36,3 +36,21 @@ export const createRoom = createAsyncThunk(
     }
   }
 );
+
+export const updateRoom = createAsyncThunk(
+  'rooms/updateRoom',
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await roomService.updateAsync(payload);
+
+      if (!response?.flag) {
+        return rejectWithValue(response.message);
+      }
+
+      return response?.data?.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
+    }
+  }
+);

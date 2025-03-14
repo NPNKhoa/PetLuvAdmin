@@ -12,13 +12,16 @@ import roomTypeReducer from './slices/roomTypeSlice.js';
 import bookingReducer from './slices/bookingSlice.js';
 import paymentStatusReducer from './slices/paymentStatusSlice.js';
 import bookingStatusReducer from './slices/bookingStatusSlice.js';
+import petReducer from './slices/petSlice.js';
+import userReducer from './slices/userSlice.js';
+import comboReducer from './slices/comboSlice.js';
 
 // const authUserFilter = createFilter('auth', ['user']);
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['services', 'serviceTypes'],
+  whitelist: ['services', 'serviceTypes', 'paymentStatuses', 'bookingStatuses'],
   //   transforms: [authUserFilter],
 };
 
@@ -30,6 +33,9 @@ const rootReducer = combineReducers({
   bookings: bookingReducer,
   paymentStatuses: paymentStatusReducer,
   bookingStatuses: bookingStatusReducer,
+  pets: petReducer,
+  users: userReducer,
+  combos: comboReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

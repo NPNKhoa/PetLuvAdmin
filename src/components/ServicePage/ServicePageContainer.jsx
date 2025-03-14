@@ -11,6 +11,7 @@ import { getServiceTypes } from '../../redux/thunks/serviceTypeThunk';
 import serviceService from '../../services/service.service';
 import { setSelectedService } from '../../redux/slices/serviceSlice';
 import UpdateServiceFormModal from './UpdateServiceFormModal';
+import ViewServiceDetailModal from './ViewServiceDetailModal';
 
 const columns = [
   {
@@ -44,7 +45,7 @@ const columns = [
   {
     field: 'isVisible',
     headerName: 'Trạng thái',
-    flex: 1,
+    flex: 1.5,
     align: 'center',
     headerAlign: 'center',
     renderCell: (params) => {
@@ -85,6 +86,7 @@ const ServicePageContainer = () => {
 
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [viewModalOpen, setViewModalOpen] = useState(false);
 
   const handleSearch = (event) => {
     setSearchText(event.target.value);
@@ -114,6 +116,7 @@ const ServicePageContainer = () => {
     () => setUpdateModalOpen(false),
     []
   );
+  const handleCloseViewModal = useCallback(() => setViewModalOpen(false), []);
 
   const handleUpdate = () => {
     if (!Array.isArray(selectedRows) || selectedRows.length === 0) {
@@ -144,6 +147,11 @@ const ServicePageContainer = () => {
       toast.error('Xóa thất bại! Vui lòng thử lại.');
       console.log(error);
     }
+  };
+
+  const handleViewDetail = (params) => {
+    setViewModalOpen(true);
+    setSelectedService(params.id);
   };
 
   useEffect(() => {
@@ -207,20 +215,33 @@ const ServicePageContainer = () => {
           columns={columns}
           rows={filteredRows}
           handleRowSelection={handleSelectRow}
+          onView={handleViewDetail}
         />
       )}
 
       {/* Modal */}
-      <CreateServiceFormModal
-        open={createModalOpen}
-        onClose={handleCloseAddModal}
-      />
+      {createModalOpen && (
+        <CreateServiceFormModal
+          open={createModalOpen}
+          onClose={handleCloseAddModal}
+        />
+      )}
 
-      <UpdateServiceFormModal
-        open={updateModalOpen}
-        onClose={handleCloseUpdateModal}
-        service={selectedService}
-      />
+      {updateModalOpen && (
+        <UpdateServiceFormModal
+          open={updateModalOpen}
+          onClose={handleCloseUpdateModal}
+          service={selectedService}
+        />
+      )}
+
+      {viewModalOpen && (
+        <ViewServiceDetailModal
+          open={viewModalOpen}
+          onClose={handleCloseViewModal}
+          service={selectedService}
+        />
+      )}
     </Box>
   );
 };

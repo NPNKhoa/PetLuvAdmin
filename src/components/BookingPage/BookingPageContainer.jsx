@@ -2,13 +2,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import { getAllRooms } from '../../redux/thunks/roomThunk';
-import { Search, Add, Edit, Delete } from '@mui/icons-material';
+import { Search, Edit } from '@mui/icons-material';
 import DataTable from '../common/DataTable';
 import { Box, CircularProgress, TextField } from '@mui/material';
 import { getBookings } from '../../redux/thunks/bookingThunk';
 import dayjs from 'dayjs';
-import { format, isValid, parseISO } from 'date-fns';
 import formatCurrency from '../../utils/formatCurrency';
 import {
   resetSelectedBooking,
@@ -17,6 +15,9 @@ import {
 import { getPaymentStatuses } from '../../redux/thunks/paymentStatusThunk';
 import { getBookingStatuses } from '../../redux/thunks/bookingStatusThunk';
 import UpdateBookingFormModal from './UpdateFormBookingModal';
+import ViewBookingDetailModal from './ViewBookingDetailModal';
+import { getPets } from '../../redux/thunks/petThunk';
+import { getUsers } from '../../redux/thunks/userThunk';
 
 const paymentStatusColors = {
   'Chờ thanh toán': '#FFA500', // Màu cam
@@ -112,6 +113,9 @@ const BookingPageContainer = () => {
   const bookings = useSelector((state) => state.bookings.bookings);
   const loading = useSelector((state) => state.bookings.loading);
 
+  const pets = useSelector((state) => state.pets.pets);
+  const users = useSelector((state) => state.users.users);
+
   const selectedBooking = useSelector(
     (state) => state.bookings.selectedBooking
   );
@@ -137,8 +141,8 @@ const BookingPageContainer = () => {
   const [searchText, setSearchText] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
 
-  const [createModalOpen, setCreateModalOpen] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [viewModalOpen, setViewModalOpen] = useState(false);
 
   const handleSearch = (event) => {
     setSearchText(event.target.value);
@@ -156,18 +160,27 @@ const BookingPageContainer = () => {
     );
   }, [rows, searchText]);
 
-  //   const handleAdd = () => {
-  //     // Pre-fetch room type
-  //     dispatch(getRoomTypes({ pageIndex: 1, pageSize: 10 }));
+  // const handleAdd = () => {
+  //   // Pre-fetch room type
+  //   dispatch(getRoomTypes({ pageIndex: 1, pageSize: 10 }));
 
-  //     setCreateModalOpen(true);
-  //   };
+  //   setCreateModalOpen(true);
+  // };
 
   //   const handleCloseAddModal = useCallback(() => setCreateModalOpen(false), []);
   const handleCloseUpdateModal = useCallback(
     () => {
       setUpdateModalOpen(false);
-      // dispatch(resetSelectedBooking());
+      dispatch(resetSelectedBooking());
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  const handleCloseViewModal = useCallback(
+    () => {
+      setViewModalOpen(false);
+      dispatch(resetSelectedBooking());
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -190,22 +203,42 @@ const BookingPageContainer = () => {
     setUpdateModalOpen(true);
   };
 
-  //   const handleDelete = async () => {
-  //     if (!Array.isArray(selectedRows) || selectedRows.length === 0) return;
+  const handleViewDetail = (params) => {
+    dispatch(setSelectedBooking(params.id));
+    setViewModalOpen(true);
+  };
 
-  //     try {
-  //       //   await Promise.all(
-  //       //     selectedRows.map((serviceId) => serviceService.deleteService(serviceId))
-  //       //   );
+  const viewingBooking = useMemo(() => {
+    const viewingPet =
+      Array.isArray(pets) &&
+      pets.find((p) => p.petId === selectedBooking?.petId);
+    const viewingUser =
+      Array.isArray(users) &&
+      users.find((p) => p.userId === selectedBooking?.customerId);
 
-  //       dispatch(getAllRooms({ pageIndex: 1, pageSize: 10 }));
+    return {
+      ...selectedBooking,
+      pet: viewingPet,
+      user: viewingUser,
+    };
+  }, [pets, selectedBooking, users]);
 
-  //       toast.success('Xóa dịch vụ thành công!');
-  //     } catch (error) {
-  //       toast.error('Xóa thất bại! Vui lòng thử lại.');
-  //       console.log(error);
-  //     }
-  //   };
+  // const handleDelete = async () => {
+  //   if (!Array.isArray(selectedRows) || selectedRows.length === 0) return;
+
+  //   try {
+  //     //   await Promise.all(
+  //     //     selectedRows.map((serviceId) => serviceService.deleteService(serviceId))
+  //     //   );
+
+  //     dispatch(getAllRooms({ pageIndex: 1, pageSize: 10 }));
+
+  //     toast.success('Xóa dịch vụ thành công!');
+  //   } catch (error) {
+  //     toast.error('Xóa thất bại! Vui lòng thử lại.');
+  //     console.log(error);
+  //   }
+  // };
 
   useEffect(() => {
     dispatch(getBookings({ pageIndex: 1, pageSize: 10 }))
@@ -214,6 +247,9 @@ const BookingPageContainer = () => {
       .catch((error) => {
         toast.error(error);
       });
+
+    dispatch(getPets({ pageIndex: 1, pageSize: 10 }));
+    dispatch(getUsers({ pageIndex: 1, pageSize: 10 }));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -268,6 +304,7 @@ const BookingPageContainer = () => {
           columns={columns}
           rows={filteredRows}
           handleRowSelection={handleSelectRow}
+          onView={handleViewDetail}
         />
       )}
 
@@ -282,6 +319,14 @@ const BookingPageContainer = () => {
         onClose={handleCloseUpdateModal}
         booking={selectedBooking}
       />
+
+      {viewModalOpen && (
+        <ViewBookingDetailModal
+          open={viewModalOpen}
+          onClose={handleCloseViewModal}
+          booking={viewingBooking}
+        />
+      )}
     </Box>
   );
 };

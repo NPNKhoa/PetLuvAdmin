@@ -5,6 +5,7 @@ import {
   getServiceById,
   getServices,
   getVariants,
+  toggleServiceVisiblility,
   updateService,
 } from '../thunks/serviceThunk';
 
@@ -102,6 +103,25 @@ const servicesSlice = createSlice({
         );
       })
       .addCase(updateService.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+    // toggle
+    builder
+      .addCase(toggleServiceVisiblility.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(toggleServiceVisiblility.fulfilled, (state, action) => {
+        state.loading = false;
+        const updatedService = action.payload;
+        state.services = state.services.map((service) =>
+          service.serviceId === updatedService.serviceId
+            ? updatedService
+            : service
+        );
+      })
+      .addCase(toggleServiceVisiblility.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

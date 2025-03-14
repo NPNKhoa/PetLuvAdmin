@@ -2,16 +2,20 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import { getAllRooms } from '../../redux/thunks/roomThunk';
 import { Search, Add, Edit, Delete } from '@mui/icons-material';
 import DataTable from '../common/DataTable';
 import { Box, CircularProgress, TextField } from '@mui/material';
-import CreateRoomFormModal from './CreateRoomFormModal';
-import { getRoomTypes } from '../../redux/thunks/roomTypeThunk';
-import UpdateRoomFormModal from './UpdateRoomFormModal';
-import { setSelectedRoom } from '../../redux/slices/roomSlice';
-import ViewRoomDetailModal from './ViewRoomDetailModal';
-import roomService from '../../services/room.service';
+import { setSelectedBooking } from '../../redux/slices/bookingSlice';
+import { getComboById, getCombos } from '../../redux/thunks/comboThunk';
+import { getServices } from '../../redux/thunks/serviceThunk';
+import CreateComboFormModal from './CreateComboFormModal';
+import UpdateComboFormModal from './UpdateComboFormModal';
+import comboService from '../../services/combo.service';
+import ViewComboDetailModal from './ViewComboDetailModal';
+import {
+  resetSelectedCombo,
+  setSelectedCombo,
+} from '../../redux/slices/comboSlice';
 
 const columns = [
   {
@@ -22,30 +26,23 @@ const columns = [
     headerAlign: 'center',
   },
   {
-    field: 'roomName',
-    headerName: 'Tên phòng',
+    field: 'serviceComboName',
+    headerName: 'Tên combo',
     flex: 2,
     align: 'left',
     headerAlign: 'center',
   },
   {
-    field: 'roomDesc',
+    field: 'serviceComboDesc',
     headerName: 'Mô tả',
     flex: 3,
     align: 'left',
     headerAlign: 'center',
   },
   {
-    field: 'roomTypeName',
-    headerName: 'Loại phòng',
-    flex: 2,
-    align: 'left',
-    headerAlign: 'center',
-  },
-  {
     field: 'isVisible',
     headerName: 'Trạng thái',
-    flex: 1,
+    flex: 1.5,
     align: 'center',
     headerAlign: 'center',
     renderCell: (params) => {
@@ -61,23 +58,26 @@ const columns = [
   },
 ];
 
-const RoomPageContainer = () => {
+const ComboPageContainer = () => {
   const dispatch = useDispatch();
 
-  const rooms = useSelector((state) => state.rooms.rooms);
-  const loading = useSelector((state) => state.rooms.loading);
+  const combos = useSelector((state) => state.combos.combos);
+  const loading = useSelector((state) => state.combos.loading);
 
-  const selectedRoom = useSelector((state) => state.rooms.selectedRoom);
+  const services = useSelector((state) => state.services.services);
+
+  const combo = useSelector((state) => state.combos.combo);
+  const selectedCombo = useSelector((state) => state.combos.selectedCombo);
 
   const rows = useMemo(() => {
-    return Array.isArray(rooms) && rooms.length !== 0
-      ? rooms.map((item, index) => ({
-          id: item.roomId,
-          index: index + 1,
+    return Array.isArray(combos) && combos.length !== 0
+      ? combos.map((item, index) => ({
           ...item,
+          id: item.serviceComboId,
+          index: index + 1,
         }))
       : [];
-  }, [rooms]);
+  }, [combos]);
 
   const [searchText, setSearchText] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
@@ -102,34 +102,50 @@ const RoomPageContainer = () => {
     );
   }, [rows, searchText]);
 
+  const handleCloseAddModal = useCallback(() => setCreateModalOpen(false), []);
+  const handleCloseUpdateModal = useCallback(() => {
+    setUpdateModalOpen(false);
+  }, []);
+
+  const handleCloseViewModal = useCallback(
+    () => {
+      setViewModalOpen(false);
+      dispatch(resetSelectedCombo());
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
   const handleAdd = () => {
     // Pre-fetch room type
-    dispatch(getRoomTypes({ pageIndex: 1, pageSize: 10 }));
+    !Array.isArray(services) ||
+      (services.length === 0 &&
+        dispatch(getServices({ pageIndex: 1, pageSize: 10 })));
 
     setCreateModalOpen(true);
   };
 
-  const handleCloseAddModal = useCallback(() => setCreateModalOpen(false), []);
-  const handleCloseUpdateModal = useCallback(
-    () => setUpdateModalOpen(false),
-    []
-  );
-  const handleCloseViewModal = useCallback(() => setViewModalOpen(false), []);
-
   const handleUpdate = () => {
     if (!Array.isArray(selectedRows) || selectedRows.length === 0) {
-      return toast.error('Vui lòng chọn 1 hàng để cập nhật');
+      return toast.warn('Vui lòng chọn 1 hàng để cập nhật');
     }
 
     if (selectedRows.length > 1) {
-      return toast.error('Vui lòng chỉ chọn 1 hàng để cập nhật');
+      return toast.warn('Vui lòng chỉ chọn 1 hàng để cập nhật');
     }
 
     // Pre-fetch
-    dispatch(getRoomTypes({ pageIndex: 1, pageSize: 20 }));
+    !Array.isArray(services) ||
+      (services.length === 0 &&
+        dispatch(getServices({ pageIndex: 1, pageSize: 10 })));
 
-    dispatch(setSelectedRoom(selectedRows[0]));
-    setUpdateModalOpen(true);
+    dispatch(getComboById(selectedRows[0]))
+      .unwrap()
+      .then(() => setUpdateModalOpen(true))
+      .catch((error) => {
+        console.log('Lỗi khi get combo by id', error);
+        toast.error(error || 'Có lỗi xảy ra. Vui lòng thử lại sau');
+      });
   };
 
   const handleDelete = async () => {
@@ -137,12 +153,12 @@ const RoomPageContainer = () => {
 
     try {
       await Promise.all(
-        selectedRows.map((roomId) => roomService.deleteRoom(roomId))
+        selectedRows.map((comboId) => comboService.deleteAsync(comboId))
       );
 
-      dispatch(getAllRooms({ pageIndex: 1, pageSize: 10 }));
+      dispatch(getCombos({ pageIndex: 1, pageSize: 10 }));
 
-      toast.success('Xóa phòng thành công!');
+      toast.success('Xóa dịch vụ thành công!');
     } catch (error) {
       toast.error('Xóa thất bại! Vui lòng thử lại.');
       console.log(error);
@@ -150,16 +166,12 @@ const RoomPageContainer = () => {
   };
 
   const handleViewDetail = (params) => {
-    // Pre-fetch
-    dispatch(getRoomTypes({ pageIndex: 1, pageSize: 20 }));
-
-    dispatch(setSelectedRoom(params?.id));
-
+    combo && dispatch(getComboById(params.id));
     setViewModalOpen(true);
   };
 
   useEffect(() => {
-    dispatch(getAllRooms({ pageIndex: 1, pageSize: 10 }))
+    dispatch(getCombos({ pageIndex: 1, pageSize: 10 }))
       .unwrap()
       .then()
       .catch((error) => {
@@ -196,7 +208,7 @@ const RoomPageContainer = () => {
             <Add /> Thêm
           </button>
           <button
-            className='bg-secondary-supper-light rounded-lg px-9 py-3 text-white font-medium hover:bg-secondary-light'
+            className='bg-blue-600 rounded-lg px-9 py-3 text-white font-medium hover:bg-secondary-light'
             onClick={handleUpdate}
           >
             <Edit /> Cập nhật
@@ -224,30 +236,30 @@ const RoomPageContainer = () => {
       )}
 
       {/* Modal */}
-      {createModalOpen && (
-        <CreateRoomFormModal
-          open={createModalOpen}
-          onClose={handleCloseAddModal}
-        />
-      )}
+      <CreateComboFormModal
+        open={createModalOpen}
+        onClose={handleCloseAddModal}
+        services={services}
+      />
 
       {updateModalOpen && (
-        <UpdateRoomFormModal
+        <UpdateComboFormModal
           open={updateModalOpen}
           onClose={handleCloseUpdateModal}
-          room={selectedRoom}
+          comboData={selectedCombo}
+          services={services}
         />
       )}
 
       {viewModalOpen && (
-        <ViewRoomDetailModal
+        <ViewComboDetailModal
           open={viewModalOpen}
           onClose={handleCloseViewModal}
-          room={selectedRoom}
+          combo={combo}
         />
       )}
     </Box>
   );
 };
 
-export default RoomPageContainer;
+export default ComboPageContainer;

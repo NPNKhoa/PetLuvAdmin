@@ -115,3 +115,30 @@ export const updateService = createAsyncThunk(
     }
   }
 );
+
+export const toggleServiceVisiblility = createAsyncThunk(
+  'services/toggleServiceVisiblility',
+  async (payload, { rejectWithValue }) => {
+    if (!payload?.serviceId) {
+      return rejectWithValue('ServiceId không hợp lệ');
+    }
+
+    try {
+      const body = { ...payload, isVisible: !payload.isVisible };
+
+      const response = await servicesService.updateService(
+        payload.serviceId,
+        body
+      );
+
+      if (!response?.flag) {
+        return rejectWithValue(response?.message);
+      }
+
+      return response?.data?.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
+    }
+  }
+);

@@ -1,9 +1,10 @@
 import React from 'react';
+import ComboPageContainer from '../components/ComboPage/ComboPageContainer';
 
 const ComboPage = () => {
   return (
     <div>
-      <h1>ComboPage</h1>
+      <ComboPageContainer />
     </div>
   );
 };

@@ -164,7 +164,7 @@ const UpdateServiceFormModal = ({ open, onClose, service }) => {
                 {imagePreviews.map((src, index) => (
                   <img
                     key={index}
-                    src={src}
+                    src={`${import.meta.env.VITE_API_BASE_URL}${src}`}
                     alt='Preview'
                     className='w-20 h-20 object-cover rounded-lg shadow-md'
                   />
