@@ -150,8 +150,8 @@ const ServicePageContainer = () => {
   };
 
   const handleViewDetail = (params) => {
+    dispatch(setSelectedService(params.id));
     setViewModalOpen(true);
-    setSelectedService(params.id);
   };
 
   useEffect(() => {

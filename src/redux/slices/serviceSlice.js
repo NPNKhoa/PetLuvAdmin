@@ -30,6 +30,19 @@ const servicesSlice = createSlice({
     resetSelectedService: (state) => {
       state.selectedService = null;
     },
+
+    updateVariants: (state, action) => {
+      const variant = action.payload;
+
+      state.selectedService.serviceVariants = [
+        ...state.selectedService.serviceVariants,
+        variant,
+      ];
+
+      state.services.forEach((service) => {
+        service.serviceVariants = [...service.serviceVariants, variant];
+      });
+    },
   },
   extraReducers: (builder) => {
     // Get All
@@ -157,5 +170,5 @@ const servicesSlice = createSlice({
 
 export default servicesSlice.reducer;
 
-export const { setSelectedService, resetSelectedService } =
+export const { setSelectedService, resetSelectedService, updateVariants } =
   servicesSlice.actions;

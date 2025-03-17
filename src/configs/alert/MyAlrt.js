@@ -23,6 +23,10 @@ class MyAlrt {
           animate__faster
         `,
     };
+
+    this.customClass = {
+      title: 'my-swal-title',
+    };
   }
 
   Error(
@@ -46,6 +50,7 @@ class MyAlrt {
       imageAlt: 'Alert Image',
       showClass: this.showClass,
       hideClass: this.hideClass,
+      customClass: this.customClass,
     }).then((result) => {
       if (result.isConfirmed) {
         confirmResult();
@@ -66,6 +71,7 @@ class MyAlrt {
       imageAlt: 'Alert Image',
       showClass: this.showClass,
       hideClass: this.hideClass,
+      customClass: this.customClass,
     }).then((result) => {
       if (result.isConfirmed) {
         confirmResult();
@@ -86,6 +92,7 @@ class MyAlrt {
       imageAlt: 'Alert Image',
       showClass: this.showClass,
       hideClass: this.hideClass,
+      customClass: this.customClass,
     }).then((result) => {
       if (result.isConfirmed) {
         confirmResult();
@@ -106,6 +113,7 @@ class MyAlrt {
       imageAlt: 'Alert Image',
       showClass: this.showClass,
       hideClass: this.hideClass,
+      customClass: this.customClass,
     }).then((result) => {
       if (result.isConfirmed) {
         confirmResult();
@@ -126,6 +134,7 @@ class MyAlrt {
       imageAlt: 'Alert Image',
       showClass: this.showClass,
       hideClass: this.hideClass,
+      customClass: this.customClass,
     }).then((result) => {
       if (result.isConfirmed) {
         confirmResult();
