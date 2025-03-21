@@ -7,11 +7,13 @@ export const getServices = createAsyncThunk(
     try {
       const response = await servicesService.getServices(params);
 
+      console.log(response);
+
       if (!response?.flag) {
         return rejectWithValue(response?.message);
       }
 
-      return response.data.data;
+      return response?.data?.data || response?.data;
     } catch (error) {
       console.log(error);
       return rejectWithValue(error.message);

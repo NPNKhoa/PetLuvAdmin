@@ -3,8 +3,6 @@ import CustomModal from '../common/CustomModal';
 import formatCurrency from '../../utils/formatCurrency';
 
 const ViewRoomDetailModal = ({ open, onClose, room }) => {
-  if (!room) return null;
-
   return (
     <CustomModal
       open={open}

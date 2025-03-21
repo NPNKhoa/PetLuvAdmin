@@ -10,7 +10,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   const location = useLocation();
 
   const currentPage = useMemo(
-    () => sidebarItems.find((item) => item.path === location.pathname).name,
+    () => sidebarItems.find((item) => item.path === location.pathname)?.name,
     [location]
   );
 

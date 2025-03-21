@@ -13,6 +13,7 @@ const AddWalkDogVariantModal = ({ open, onClose, serviceId, onAddVariant }) => {
       serviceId,
       breedId: '',
       pricePerPeriod: '',
+      period: '',
       isVisible: 'true',
     },
     validationSchema: Yup.object({
@@ -20,7 +21,11 @@ const AddWalkDogVariantModal = ({ open, onClose, serviceId, onAddVariant }) => {
       pricePerPeriod: Yup.number()
         .typeError('Phải là số')
         .positive('Giá phải lớn hơn 0')
-        .required('Vui lòng nhập giá theo kỳ hạn'),
+        .required('Vui lòng nhập giá'),
+      period: Yup.number()
+        .typeError('Phải là số')
+        .positive('Thời gian phải lớn hơn 0')
+        .required('Vui lòng nhập Thời gian'),
       isVisible: Yup.string().required('Vui lòng chọn trạng thái'),
     }),
     onSubmit: (values) => {
@@ -67,7 +72,7 @@ const AddWalkDogVariantModal = ({ open, onClose, serviceId, onAddVariant }) => {
 
           <TextField
             fullWidth
-            label='Giá theo giờ'
+            label='Giá'
             type='number'
             {...formik.getFieldProps('pricePerPeriod')}
             onWheel={(e) => e.target.blur()}
@@ -80,6 +85,19 @@ const AddWalkDogVariantModal = ({ open, onClose, serviceId, onAddVariant }) => {
             }
             InputProps={{
               endAdornment: <InputAdornment position='end'>VNĐ</InputAdornment>,
+            }}
+          />
+
+          <TextField
+            fullWidth
+            label='Thời gian thực hiện'
+            type='number'
+            {...formik.getFieldProps('period')}
+            onWheel={(e) => e.target.blur()}
+            error={formik.touched.period && Boolean(formik.errors.period)}
+            helperText={formik.touched.period && formik.errors.period}
+            InputProps={{
+              endAdornment: <InputAdornment position='end'>Giờ</InputAdornment>,
             }}
           />
 

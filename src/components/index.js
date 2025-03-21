@@ -8,6 +8,8 @@ import ServicePageContainer from './ServicePage/ServicePageContainer';
 import RoomPageContainer from './RoomPage/RoomPageContainer';
 
 import BookingPageContainer from './BookingPage/BookingPageContainer';
+import CustomerCard from '../components/common/CustomerCard';
+import RoomCard from '../components/common/RoomCard';
 
 export {
   Router,
@@ -17,4 +19,6 @@ export {
   ServicePageContainer,
   RoomPageContainer,
   BookingPageContainer,
+  CustomerCard,
+  RoomCard,
 };

@@ -56,11 +56,16 @@ const CareServiceForm = ({
         }
         helperText={formik.touched.serviceTypeId && formik.errors.serviceTypeId}
       >
-        {serviceTypes.map((type) => (
-          <MenuItem key={type.serviceTypeId} value={type.serviceTypeId}>
-            {type.serviceTypeName}
-          </MenuItem>
-        ))}
+        {serviceTypes.map((type) => {
+          if (type?.serviceTypeName?.toLowerCase()?.includes('khách sạn'))
+            return;
+
+          return (
+            <MenuItem key={type.serviceTypeId} value={type.serviceTypeId}>
+              {type.serviceTypeName}
+            </MenuItem>
+          );
+        })}
       </TextField>
 
       {/* Upload ảnh */}

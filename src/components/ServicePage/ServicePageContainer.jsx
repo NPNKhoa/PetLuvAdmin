@@ -127,7 +127,6 @@ const ServicePageContainer = () => {
       return toast.error('Vui lòng chỉ chọn 1 hàng để cập nhật');
     }
 
-    console.log(selectedRows[0]);
     dispatch(setSelectedService(selectedRows[0]));
     setUpdateModalOpen(true);
   };

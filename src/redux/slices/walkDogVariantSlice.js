@@ -16,7 +16,11 @@ const initialState = {
 const walkDogVariantsSlice = createSlice({
   name: 'walkDogVariants',
   initialState,
-  reducers: {},
+  reducers: {
+    resetWDVariants: (state) => {
+      state.walkDogVariants = [];
+    },
+  },
   extraReducers: (builder) => {
     // Get By Service
     builder
@@ -70,3 +74,5 @@ const walkDogVariantsSlice = createSlice({
 });
 
 export default walkDogVariantsSlice.reducer;
+
+export const { resetWDVariants } = walkDogVariantsSlice.actions;

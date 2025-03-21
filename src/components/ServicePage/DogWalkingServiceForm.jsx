@@ -13,7 +13,7 @@ const DogWalkingServiceForm = ({
   useEffect(() => {
     formik.setFieldValue(
       'serviceTypeId',
-      '3f2c2956-993d-4445-a305-109f172b54fe'
+      'd734146d-3fa5-42cc-bb0b-621c186badb4'
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

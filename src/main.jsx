@@ -14,6 +14,13 @@ import store, { persister } from './redux/store.js';
 import { PersistGate } from 'redux-persist/integration/react';
 import { LoadingPage } from './pages/index.js';
 
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 createRoot(document.getElementById('root')).render(
   <>
     <Provider store={store}>

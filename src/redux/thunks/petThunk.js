@@ -36,3 +36,21 @@ export const getPetById = createAsyncThunk(
     }
   }
 );
+
+export const getPetByUser = createAsyncThunk(
+  'pets/getPetByUser',
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await petService.getByUser(userId);
+
+      if (!response.flag) {
+        return rejectWithValue(response.message);
+      }
+
+      return response?.data?.data || response?.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
+    }
+  }
+);

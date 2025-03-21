@@ -45,7 +45,10 @@ const ViewServiceDetailModal = ({ open, onClose, service }) => {
   );
 
   useEffect(() => {
-    if (!service.walkDogServiceVariants?.length > 0) {
+    if (
+      Array.isArray(service.walkDogServiceVariants) &&
+      service.walkDogServiceVariants?.length === 0
+    ) {
       dispatch(getWalkDogVariantByServiceId(service.serviceId));
     }
 
@@ -244,116 +247,121 @@ const ViewServiceDetailModal = ({ open, onClose, service }) => {
           </button>
         </div>
 
-        {service.serviceVariants?.length > 0 ? (
-          <div className='pt-2'>
-            <div className='grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4'>
-              {!service.serviceTypeName.toLowerCase().includes('dắt chó')
-                ? service.serviceVariants.map((variant, index) => (
-                    <div
-                      key={index}
-                      className='relative border rounded-lg p-4 shadow bg-gray-50'
-                    >
-                      {/* Nội dung biến thể */}
-                      <div className='space-y-1'>
-                        <div className='flex items-center justify-between my-1'>
-                          <p>
-                            <strong>Giống:</strong> {variant.breedName}
-                          </p>
-                          <p>
-                            <strong>Cân nặng:</strong> {variant.petWeightRange}
-                          </p>
-                        </div>
-                        <div className='flex items-center justify-between my-1'>
-                          <p>
-                            <strong>Giá:</strong>{' '}
-                            {formatCurrency(variant.price)}
-                          </p>
-                          <p>
-                            <strong>Ước tính:</strong> {variant.estimateTime}{' '}
-                            tiếng
-                          </p>
-                        </div>
-                        <div className='flex items-center justify-between pt-4'>
-                          <p className='py-4'>
-                            {variant.isVisible ? (
-                              <span className='bg-primary px-8 py-2 rounded-full text-white'>
-                                Hiển thị
-                              </span>
-                            ) : (
-                              <span className='bg-secondary-light px-8 py-2 rounded-full text-white'>
-                                Đã ẩn
-                              </span>
-                            )}
-                          </p>
+        <div className='pt-2'>
+          <div className='grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4'>
+            {!service.serviceTypeName.toLowerCase().includes('dắt chó') ? (
+              service.serviceVariants?.length > 0 ? (
+                service.serviceVariants.map((variant, index) => (
+                  <div
+                    key={index}
+                    className='relative border rounded-lg p-4 shadow bg-gray-50'
+                  >
+                    {/* Nội dung biến thể */}
+                    <div className='space-y-1'>
+                      {console.log(variant)}
+                      <div className='flex items-center justify-between my-1'>
+                        <p>
+                          <strong>Giống:</strong> {variant.breedName}
+                        </p>
+                        <p>
+                          <strong>Cân nặng:</strong> {variant.petWeightRange}
+                        </p>
+                      </div>
+                      <div className='flex items-center justify-between my-1'>
+                        <p>
+                          <strong>Giá:</strong> {formatCurrency(variant.price)}
+                        </p>
+                        <p>
+                          <strong>Ước tính:</strong> {variant.estimateTime}{' '}
+                          tiếng
+                        </p>
+                      </div>
+                      <div className='flex items-center justify-between pt-4'>
+                        <p className='py-4'>
+                          {variant.isVisible ? (
+                            <span className='bg-primary px-8 py-2 rounded-full text-white'>
+                              Hiển thị
+                            </span>
+                          ) : (
+                            <span className='bg-secondary-light px-8 py-2 rounded-full text-white'>
+                              Đã ẩn
+                            </span>
+                          )}
+                        </p>
 
-                          <div>
-                            <IconButton
-                              color='info'
-                              onClick={() =>
-                                handleOpenEditVariantModal(variant)
-                              }
-                            >
-                              <Edit />
-                            </IconButton>
-                            <IconButton color='error'>
-                              <Delete />
-                            </IconButton>
-                          </div>
+                        <div>
+                          <IconButton
+                            color='info'
+                            onClick={() => handleOpenEditVariantModal(variant)}
+                          >
+                            <Edit />
+                          </IconButton>
+                          <IconButton color='error'>
+                            <Delete />
+                          </IconButton>
                         </div>
                       </div>
                     </div>
-                  ))
-                : finalWalkDogVariants?.length > 0
-                ? finalWalkDogVariants?.map((variant, index) => (
-                    <div
-                      key={index}
-                      className='relative border rounded-lg p-4 shadow bg-gray-50'
-                    >
-                      {/* Nội dung biến thể */}
-                      <div className='space-y-1'>
-                        <div className='flex items-center justify-between my-1'>
-                          <p>
-                            <strong>Giống:</strong> {variant?.breedName}
-                          </p>
-                          <p>
-                            <strong>Giá:</strong>{' '}
-                            {formatCurrency(variant?.pricePerPeriod)}
-                          </p>
-                        </div>
-                        <div className='flex items-center justify-between pt-4'>
-                          <p className='py-4'>
-                            {variant.isVisible ? (
-                              <span className='bg-primary px-8 py-2 rounded-full text-white'>
-                                Hiển thị
-                              </span>
-                            ) : (
-                              <span className='bg-secondary-light px-8 py-2 rounded-full text-white'>
-                                Đã ẩn
-                              </span>
-                            )}
-                          </p>
+                  </div>
+                ))
+              ) : (
+                <p>Không tìm thấy biến thể phù hợp</p>
+              )
+            ) : finalWalkDogVariants?.length > 0 ? (
+              finalWalkDogVariants?.map((variant, index) => (
+                <div
+                  key={index}
+                  className='relative border rounded-lg p-4 shadow bg-gray-50'
+                >
+                  <div className='space-y-1'>
+                    <div className='flex items-center justify-between my-1'>
+                      <p>
+                        <strong>Giống:</strong> {variant?.breedName}
+                      </p>
+                      <p>
+                        <strong>Giá:</strong>{' '}
+                        {formatCurrency(variant?.pricePerPeriod)}
+                      </p>
+                    </div>
+                    <div className='flex items-center justify-between my-1'>
+                      <p>
+                        <strong>Thời gian thực hiện:</strong> {variant?.period}{' '}
+                        giờ
+                      </p>
+                    </div>
+                    <div className='flex items-center justify-between pt-4'>
+                      <p className='py-4'>
+                        {variant.isVisible ? (
+                          <span className='bg-primary px-4 py-1 rounded-full text-white text-sm'>
+                            Hiển thị
+                          </span>
+                        ) : (
+                          <span className='bg-secondary-light px-8 py-2 rounded-full text-white'>
+                            Đã ẩn
+                          </span>
+                        )}
+                      </p>
 
-                          <div>
-                            <IconButton
-                              color='info'
-                              onClick={() =>
-                                handleOpenEditVariantModal(variant)
-                              }
-                            >
-                              <Edit />
-                            </IconButton>
-                            <IconButton color='error'>
-                              <Delete />
-                            </IconButton>
-                          </div>
-                        </div>
+                      <div>
+                        <IconButton
+                          color='info'
+                          onClick={() => handleOpenEditVariantModal(variant)}
+                        >
+                          <Edit />
+                        </IconButton>
+                        <IconButton color='error'>
+                          <Delete />
+                        </IconButton>
                       </div>
                     </div>
-                  ))
-                : null}
-            </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>Không có biến thể nào được tìm thấy</p>
+            )}
           </div>
-        ) : null}
+        </div>
       </div>
 
       {showAddVariantModal &&

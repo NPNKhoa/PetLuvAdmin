@@ -19,6 +19,24 @@ export const getBookings = createAsyncThunk(
   }
 );
 
+export const createBooking = createAsyncThunk(
+  'bookings/createBooking',
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await bookingService.createBooking(payload);
+
+      if (!response?.flag) {
+        return rejectWithValue(response.message);
+      }
+
+      return response?.data?.data || response?.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
+    }
+  }
+);
+
 export const updateBooking = createAsyncThunk(
   'bookings/updateBooking',
   async (params, { rejectWithValue }) => {

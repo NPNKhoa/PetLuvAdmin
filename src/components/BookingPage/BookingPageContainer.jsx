@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import { Search, Edit } from '@mui/icons-material';
+import { Search, Edit, Add } from '@mui/icons-material';
 import DataTable from '../common/DataTable';
 import { Box, CircularProgress, TextField } from '@mui/material';
 import { getBookings } from '../../redux/thunks/bookingThunk';
@@ -18,6 +18,7 @@ import UpdateBookingFormModal from './UpdateFormBookingModal';
 import ViewBookingDetailModal from './ViewBookingDetailModal';
 import { getPets } from '../../redux/thunks/petThunk';
 import { getUsers } from '../../redux/thunks/userThunk';
+import { Link } from 'react-router-dom';
 
 const paymentStatusColors = {
   'Chờ thanh toán': '#FFA500', // Màu cam
@@ -160,12 +161,11 @@ const BookingPageContainer = () => {
     );
   }, [rows, searchText]);
 
-  // const handleAdd = () => {
-  //   // Pre-fetch room type
-  //   dispatch(getRoomTypes({ pageIndex: 1, pageSize: 10 }));
-
-  //   setCreateModalOpen(true);
-  // };
+  const handleAdd = () => {
+    // Pre-fetch customers
+    dispatch(getUsers({ pageIndex: 1, pageSize: 20 }));
+    // setCreateModalOpen(true);
+  };
 
   //   const handleCloseAddModal = useCallback(() => setCreateModalOpen(false), []);
   const handleCloseUpdateModal = useCallback(
@@ -274,14 +274,15 @@ const BookingPageContainer = () => {
           InputProps={{ startAdornment: <Search sx={{ mr: 1 }} /> }}
         />
         <Box sx={{ display: 'flex', gap: 2 }}>
-          {/* <button
+          <Link
+            to={'them-moi'}
             className='bg-primary rounded-lg px-9 py-3 text-white font-medium hover:bg-primary-dark'
             onClick={handleAdd}
           >
             <Add /> Thêm
-          </button> */}
+          </Link>
           <button
-            className='bg-primary rounded-lg px-9 py-3 text-white font-medium hover:bg-primary-dark'
+            className='bg-blue-600 rounded-lg px-9 py-3 text-white font-medium hover:bg-secondary-light'
             onClick={handleUpdate}
           >
             <Edit /> Cập nhật

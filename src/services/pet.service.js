@@ -26,6 +26,15 @@ class PetService {
       throw error;
     }
   }
+
+  async getByUser(userId) {
+    try {
+      const response = this.api.get(`/api/users/${userId}/pets`);
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 export default new PetService();

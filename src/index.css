@@ -19,3 +19,7 @@
   font-family: 'iciel-crocante', 'Arial', sans-serif !important;
   letter-spacing: 0.05em !important;
 }
+
+:is(tbody, table) > tr:nth-child(odd) {
+  background-color: #efefef;
+}

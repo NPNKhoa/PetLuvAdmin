@@ -17,7 +17,11 @@ const initialState = {
 const serviceVariantsSlice = createSlice({
   name: 'serviceVariants',
   initialState,
-  reducers: {},
+  reducers: {
+    resetVariants: (state) => {
+      state.serviceVariants = [];
+    },
+  },
   extraReducers: (builder) => {
     // Get All
     builder
@@ -40,7 +44,7 @@ const serviceVariantsSlice = createSlice({
       })
       .addCase(getServiceVairantById.fulfilled, (state, action) => {
         state.loading = false;
-        state.serviceVariant = action.payload;
+        state.serviceVariants = action.payload;
       })
       .addCase(getServiceVairantById.rejected, (state, action) => {
         state.loading = false;
@@ -111,3 +115,5 @@ const serviceVariantsSlice = createSlice({
 });
 
 export default serviceVariantsSlice.reducer;
+
+export const { resetVariants } = serviceVariantsSlice.actions;

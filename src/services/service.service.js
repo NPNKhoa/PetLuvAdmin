@@ -6,8 +6,18 @@ class ServicesService {
   }
 
   async getServices(params) {
-    const { pageIndex = 1, pageSize = 10 } = params;
-    const query = new URLSearchParams({ pageIndex, pageSize }).toString();
+    const {
+      pageIndex = 1,
+      pageSize = 10,
+      breedId = '',
+      petWeight = '',
+    } = params;
+    const query = new URLSearchParams({
+      pageIndex,
+      pageSize,
+      breedId,
+      petWeight,
+    }).toString();
 
     try {
       const response = await this.api.get(`?${query}`);

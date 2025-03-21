@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import {
+  AddBookingPage,
   AuthorPage,
   BookingPage,
   ComboPage,
@@ -51,6 +52,11 @@ export default [
     id: `admin-route-${uuidv4()}`,
     path: '/quan-ly-booking',
     element: <BookingPage />,
+  },
+  {
+    id: `admin-route-${uuidv4()}`,
+    path: '/quan-ly-booking/them-moi',
+    element: <AddBookingPage />,
   },
   {
     id: `admin-route-${uuidv4()}`,

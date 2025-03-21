@@ -9,7 +9,9 @@ import ProductPage from './ProductPage';
 import PetPage from './PetPage';
 import UserPage from './Userpage';
 import BookingPage from './BookingPage';
+import AddBookingPage from './AddBookingPage';
 import AuthorPage from './AuthorPage';
+import CustomerSelection from '../components/AddBookingPage/CustomerSelection';
 
 export {
   LoadingPage,
@@ -22,5 +24,7 @@ export {
   PetPage,
   UserPage,
   BookingPage,
+  AddBookingPage,
   AuthorPage,
+  CustomerSelection,
 };

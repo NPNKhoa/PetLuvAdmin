@@ -57,6 +57,7 @@ const servicesSlice = createSlice({
       .addCase(getServices.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.services = [];
       });
 
     // Get By Id

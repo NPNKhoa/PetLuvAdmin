@@ -18,6 +18,16 @@ class BookingService {
     }
   }
 
+  async createBooking(payload) {
+    try {
+      const response = await this.api.post('', payload);
+      return response;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   async updateAsync(params) {
     try {
       const response = await this.api.put(params.bookingId, params.payload);

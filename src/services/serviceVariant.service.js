@@ -20,7 +20,9 @@ class ServicesService {
 
   async getById(serviceId) {
     try {
-      const response = await this.api.get(`${serviceId}`);
+      const response = await this.api.get(
+        `/api/services/${serviceId}/service-variants`
+      );
       return response;
     } catch (error) {
       console.log(error);
