@@ -19,6 +19,7 @@ import petBreedReducer from './slices/petBreedSlice.js';
 import walkDogVariantReducer from './slices/walkDogVariantSlice.js';
 import serviceVariantsSlice from './slices/serviceVariantSlice.js';
 import bookingTypeSlice from './slices/bookingTypeSlice.js';
+import statisticsSlice from './slices/statisticSlice.js';
 
 // const authUserFilter = createFilter('auth', ['user']);
 
@@ -44,6 +45,7 @@ const rootReducer = combineReducers({
   serviceVariants: serviceVariantsSlice,
   walkDogVariants: walkDogVariantReducer,
   bookingTypes: bookingTypeSlice,
+  statistics: statisticsSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

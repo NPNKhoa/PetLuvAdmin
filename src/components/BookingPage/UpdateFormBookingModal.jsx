@@ -4,7 +4,7 @@ import CustomModal from '../common/CustomModal';
 import { useFormik } from 'formik';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import { updateBooking } from '../../redux/thunks/bookingThunk';
+import { getBookings, updateBooking } from '../../redux/thunks/bookingThunk';
 import formatCurrency from '../../utils/formatCurrency';
 import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
@@ -54,6 +54,7 @@ const UpdateBookingFormModal = ({ open, onClose, booking }) => {
         .unwrap()
         .then(() => {
           toast.success('Cập nhật đặt lịch thành công');
+          dispatch(getBookings());
           onClose();
         })
         .catch((e) => {
