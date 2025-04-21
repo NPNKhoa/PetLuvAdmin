@@ -6,6 +6,18 @@ import { getUserById } from '../../redux/thunks/userThunk';
 import dayjs from 'dayjs';
 import formatCurrency from '../../utils/formatCurrency';
 import { Divider } from '@mui/material';
+import {
+  FaCalendarAlt,
+  FaUser,
+  FaPaw,
+  FaMoneyBillWave,
+  FaClock,
+  FaClipboardList,
+  FaInfoCircle,
+  FaRegStickyNote,
+} from 'react-icons/fa';
+import { MdEmail, MdPhone, MdPayment, MdRoomService } from 'react-icons/md';
+import { BsClockHistory } from 'react-icons/bs';
 
 const paymentStatusColors = {
   'Chờ thanh toán': '#FFA500',
@@ -52,205 +64,379 @@ const ViewBookingDetailModal = ({ open, onClose, booking }) => {
       title='Chi tiết Lịch hẹn'
       cancelTextButton='Đóng'
     >
-      <div className='grid grid-cols-2 gap-6 p-4 mb-10'>
-        {/* Cột 1 */}
-        <div className='space-y-2'>
-          <h1 className='text-2xl text-primary font-bold'>
-            Thông tin lịch hẹn
-          </h1>
-          <p>
-            <strong>Mã Lịch hẹn:</strong> {booking.bookingId}
-          </p>
-          <p>
-            <strong>Loại Lịch hẹn:</strong>{' '}
-            {booking.bookingType?.bookingTypeName}
-          </p>
-          <p>
-            <strong>Tổng thời gian ước tính:</strong>{' '}
-            {booking.totalEstimateTime} giờ
-          </p>
-          <p>
-            <strong>Ghi chú:</strong> {booking.bookingNote || 'Không có'}
-          </p>
+      <div className='bg-white rounded-lg shadow-sm'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-6 p-6'>
+          {/* Booking Information */}
+          <div className='bg-blue-50 p-5 rounded-lg shadow-sm'>
+            <h2 className='text-2xl text-primary font-bold flex items-center gap-2 mb-4 border-b pb-2'>
+              <FaCalendarAlt className='text-primary' /> Thông tin lịch hẹn
+            </h2>
+            <div className='space-y-3'>
+              <div className='flex items-start'>
+                <FaInfoCircle className='mt-1 mr-2 text-gray-600' />
+                <div>
+                  <span className='font-semibold text-gray-700'>
+                    Mã Lịch hẹn:
+                  </span>
+                  <span className='ml-2 text-gray-800'>
+                    {booking.bookingId}
+                  </span>
+                </div>
+              </div>
+
+              <div className='flex items-start'>
+                <FaClipboardList className='mt-1 mr-2 text-gray-600' />
+                <div>
+                  <span className='font-semibold text-gray-700'>
+                    Loại Lịch hẹn:
+                  </span>
+                  <span className='ml-2 text-gray-800'>
+                    {booking.bookingType?.bookingTypeName}
+                  </span>
+                </div>
+              </div>
+
+              <div className='flex items-start'>
+                <FaClock className='mt-1 mr-2 text-gray-600' />
+                <div>
+                  <span className='font-semibold text-gray-700'>
+                    Tổng thời gian ước tính:
+                  </span>
+                  <span className='ml-2 text-gray-800'>
+                    {booking.totalEstimateTime} giờ
+                  </span>
+                </div>
+              </div>
+
+              <div className='flex items-start'>
+                <FaRegStickyNote className='mt-1 mr-2 text-gray-600' />
+                <div>
+                  <span className='font-semibold text-gray-700'>Ghi chú:</span>
+                  <span className='ml-2 text-gray-800'>
+                    {booking.bookingNote || 'Không có'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Customer Information */}
+          <div className='bg-amber-50 p-5 rounded-lg shadow-sm'>
+            <h2 className='text-2xl text-primary font-bold flex items-center gap-2 mb-4 border-b pb-2'>
+              <FaUser className='text-primary' /> Thông tin khách hàng
+            </h2>
+            <div className='space-y-3'>
+              <div className='flex items-start'>
+                <FaUser className='mt-1 mr-2 text-gray-600' />
+                <div>
+                  <span className='font-semibold text-gray-700'>
+                    Mã Khách hàng:
+                  </span>
+                  <span className='ml-2 text-gray-800'>
+                    {user ? user.userId : fetchedUser.userId}
+                  </span>
+                </div>
+              </div>
+
+              <div className='flex items-start'>
+                <FaUser className='mt-1 mr-2 text-gray-600' />
+                <div>
+                  <span className='font-semibold text-gray-700'>
+                    Tên Khách hàng:
+                  </span>
+                  <span className='ml-2 text-gray-800'>
+                    {user ? user.fullName : fetchedUser.fullName}
+                  </span>
+                </div>
+              </div>
+
+              <div className='flex items-start'>
+                <MdEmail className='mt-1 mr-2 text-gray-600' />
+                <div>
+                  <span className='font-semibold text-gray-700'>Email:</span>
+                  <span className='ml-2 text-gray-800'>
+                    {user ? user.email : fetchedUser.email}
+                  </span>
+                </div>
+              </div>
+
+              <div className='flex items-start'>
+                <MdPhone className='mt-1 mr-2 text-gray-600' />
+                <div>
+                  <span className='font-semibold text-gray-700'>SĐT:</span>
+                  <span className='ml-2 text-gray-800'>
+                    {user ? user.phoneNumber : fetchedUser.phoneNumber}
+                  </span>
+                </div>
+              </div>
+
+              <div className='flex items-start'>
+                <FaPaw className='mt-1 mr-2 text-gray-600' />
+                <div>
+                  <span className='font-semibold text-gray-700'>
+                    Mã Thú cưng:
+                  </span>
+                  <span className='ml-2 text-gray-800'>
+                    {pet ? pet.petId : fetchedPet.petId}
+                  </span>
+                </div>
+              </div>
+
+              <div className='flex items-start'>
+                <FaPaw className='mt-1 mr-2 text-gray-600' />
+                <div>
+                  <span className='font-semibold text-gray-700'>
+                    Tên Thú cưng:
+                  </span>
+                  <span className='ml-2 text-gray-800'>
+                    {pet ? pet.petName : fetchedPet.petName}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Cột 2 */}
-        <div className='space-y-2'>
-          <h1 className='text-2xl text-primary font-bold'>
-            Thông tin khách hàng
-          </h1>
-          <p>
-            <strong>Mã Khách hàng:</strong>{' '}
-            {user ? user.userId : fetchedUser.userId}
-          </p>
-          <p>
-            <strong>Tên Khách hàng:</strong>{' '}
-            {user ? user.fullName : fetchedUser.fullName}
-          </p>
-          <p>
-            <strong>Email Khách hàng:</strong>{' '}
-            {user ? user.email : fetchedUser.email}
-          </p>
-          <p>
-            <strong>SĐT Khách hàng:</strong>{' '}
-            {user ? user.phoneNumber : fetchedUser.phoneNumber}
-          </p>
-          <p>
-            <strong>Mã Thú cưng:</strong> {pet ? pet.petId : fetchedPet.petId}
-          </p>
-          <p>
-            <strong>Tên Thú cưng:</strong>{' '}
-            {pet ? pet.petName : fetchedPet.petName}
-          </p>
+        <Divider className='my-4' />
+
+        {/* Booking Details */}
+        <div className='p-6'>
+          <h2 className='text-2xl text-primary font-bold flex items-center gap-2 mb-6'>
+            <FaClipboardList className='text-primary' /> Chi tiết lịch hẹn
+          </h2>
+
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-8'>
+            <div className='bg-gray-50 p-4 rounded-lg shadow-sm'>
+              <div className='space-y-3'>
+                <div className='flex items-start'>
+                  <BsClockHistory className='mt-1 mr-2 text-gray-600' />
+                  <div>
+                    <span className='font-semibold text-gray-700'>
+                      Thời gian bắt đầu:
+                    </span>
+                    <span className='ml-2 text-gray-800'>
+                      {dayjs(booking.bookingStartTime).format(
+                        'DD/MM/YYYY HH:mm:ss'
+                      )}
+                    </span>
+                  </div>
+                </div>
+
+                <div className='flex items-start'>
+                  <BsClockHistory className='mt-1 mr-2 text-gray-600' />
+                  <div>
+                    <span className='font-semibold text-gray-700'>
+                      Thời gian kết thúc:
+                    </span>
+                    <span className='ml-2 text-gray-800'>
+                      {dayjs(booking.bookingEndTime).format(
+                        'DD/MM/YYYY HH:mm:ss'
+                      )}
+                    </span>
+                  </div>
+                </div>
+
+                <div className='flex items-start'>
+                  <FaMoneyBillWave className='mt-1 mr-2 text-gray-600' />
+                  <div>
+                    <span className='font-semibold text-gray-700'>
+                      Tổng tiền:
+                    </span>
+                    <span className='ml-2 text-gray-800'>
+                      {formatCurrency(booking.totalAmount)}
+                    </span>
+                  </div>
+                </div>
+
+                <div className='flex items-start'>
+                  <FaMoneyBillWave className='mt-1 mr-2 text-gray-600' />
+                  <div>
+                    <span className='font-semibold text-gray-700'>
+                      Tiền đặt cọc:
+                    </span>
+                    <span className='ml-2 text-gray-800'>
+                      {formatCurrency(booking.depositAmount)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className='bg-gray-50 p-4 rounded-lg shadow-sm'>
+              <div className='space-y-3'>
+                <div className='flex items-center'>
+                  <FaInfoCircle className='mr-2 text-gray-600' />
+                  <span className='font-semibold text-gray-700 mr-2'>
+                    Trạng thái Lịch hẹn:
+                  </span>
+                  <span
+                    className='px-4 py-1 rounded-full text-white text-sm font-medium'
+                    style={{
+                      backgroundColor: getBookingStatusColor(
+                        booking.bookingStatus?.bookingStatusName
+                      ),
+                    }}
+                  >
+                    {booking.bookingStatus?.bookingStatusName}
+                  </span>
+                </div>
+
+                <div className='flex items-center'>
+                  <MdPayment className='mr-2 text-gray-600' />
+                  <span className='font-semibold text-gray-700 mr-2'>
+                    Trạng thái thanh toán:
+                  </span>
+                  <span
+                    className='px-4 py-1 rounded-full text-white text-sm font-medium'
+                    style={{
+                      backgroundColor: getPaymentStatusColor(
+                        booking.paymentStatusName
+                      ),
+                    }}
+                  >
+                    {booking.paymentStatusName}
+                  </span>
+                </div>
+
+                <div className='flex items-start'>
+                  <FaClock className='mt-1 mr-2 text-gray-600' />
+                  <div>
+                    <span className='font-semibold text-gray-700'>
+                      Thời gian thuê phòng:
+                    </span>
+                    <span className='ml-2 text-gray-800'>
+                      {booking.roomRentalTime
+                        ? `${booking.roomRentalTime} giờ`
+                        : 'N/A'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Services Table */}
+          {booking.serviceBookingDetails?.length > 0 && (
+            <div className='mb-8'>
+              <h3 className='text-xl text-secondary-light font-semibold mb-4 flex items-center gap-2'>
+                <MdRoomService className='text-secondary-light' /> Dịch vụ đã
+                đặt
+              </h3>
+              <div className='overflow-x-auto'>
+                <table className='w-full border-collapse rounded-lg overflow-hidden'>
+                  <thead>
+                    <tr className='bg-blue-100'>
+                      <th className='border border-gray-300 p-3 text-left'>
+                        Dịch vụ
+                      </th>
+                      <th className='border border-gray-300 p-3 text-left'>
+                        Cân nặng
+                      </th>
+                      <th className='border border-gray-300 p-3 text-right'>
+                        Giá
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {booking.serviceBookingDetails.map((service, index) => (
+                      <tr
+                        key={index}
+                        className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+                      >
+                        <td className='border border-gray-300 p-3'>
+                          {service.serviceItemName}
+                        </td>
+                        <td className='border border-gray-300 p-3'>
+                          {service.petWeightRange}
+                        </td>
+                        <td className='border border-gray-300 p-3 text-right font-medium'>
+                          {formatCurrency(service.bookingItemPrice)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Service Combo Table */}
+          {booking.serviceComboBookingDetails?.length > 0 && (
+            <div className='mb-8'>
+              <h3 className='text-xl text-secondary-light font-semibold mb-4 flex items-center gap-2'>
+                <MdRoomService className='text-secondary-light' /> Combo dịch vụ
+                đã đặt
+              </h3>
+              <div className='overflow-x-auto'>
+                <table className='w-full border-collapse rounded-lg overflow-hidden'>
+                  <thead>
+                    <tr className='bg-blue-100'>
+                      <th className='border border-gray-300 p-3 text-left'>
+                        Tên combo
+                      </th>
+                      <th className='border border-gray-300 p-3 text-right'>
+                        Giá
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {booking.serviceComboBookingDetails.map((combo, index) => (
+                      <tr
+                        key={index}
+                        className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+                      >
+                        <td className='border border-gray-300 p-3'>
+                          {combo.comboName}
+                        </td>
+                        <td className='border border-gray-300 p-3 text-right font-medium'>
+                          {formatCurrency(combo.comboPrice)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Room Booking Table */}
+          {booking.roomBookingItem?.length > 0 && (
+            <div className='mb-4'>
+              <h3 className='text-xl text-secondary-light font-semibold mb-4 flex items-center gap-2'>
+                <MdRoomService className='text-secondary-light' /> Phòng đã đặt
+              </h3>
+              <div className='overflow-x-auto'>
+                <table className='w-full border-collapse rounded-lg overflow-hidden'>
+                  <thead>
+                    <tr className='bg-blue-100'>
+                      <th className='border border-gray-300 p-3 text-left'>
+                        Tên phòng
+                      </th>
+                      <th className='border border-gray-300 p-3 text-right'>
+                        Giá
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {booking.roomBookingItem.map((room, index) => (
+                      <tr
+                        key={index}
+                        className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+                      >
+                        <td className='border border-gray-300 p-3'>
+                          {room.roomName}
+                        </td>
+                        <td className='border border-gray-300 p-3 text-right font-medium'>
+                          {formatCurrency(room.roomPrice)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </div>
-      </div>
-
-      <Divider />
-
-      {/* Bảng chi tiết Lịch hẹn */}
-      <div className='mt-4 p-4'>
-        {/* Bảng dịch vụ đã đặt */}
-        <h1 className='text-2xl text-primary font-bold mb-2'>
-          Chi tiết lịch hẹn
-        </h1>
-        <div className='grid grid-cols-2 gap-6 mt-6'>
-          <div className='space-y-2'>
-            <p>
-              <strong>Thời gian bắt đầu:</strong>{' '}
-              {dayjs(booking.bookingStartTime).format('DD/MM/YYYY HH:mm:ss')}
-            </p>
-            <p>
-              <strong>Thời gian kết thúc:</strong>{' '}
-              {dayjs(booking.bookingEndTime).format('DD/MM/YYYY HH:mm:ss')}
-            </p>
-            <p>
-              <strong>Tổng tiền:</strong> {formatCurrency(booking.totalAmount)}
-            </p>
-            <p>
-              <strong>Tiền đặt cọc: </strong>
-              {formatCurrency(booking.depositAmount)}
-            </p>
-          </div>
-
-          <div className='space-y-2'>
-            <p className='flex items-center gap-2'>
-              <strong>Trạng thái Lịch hẹn:</strong>{' '}
-              <p
-                style={{
-                  backgroundColor: getBookingStatusColor(
-                    booking.bookingStatus?.bookingStatusName
-                  ),
-                }}
-                className='px-6 py-1 rounded-full text-white'
-              >
-                {booking.bookingStatus?.bookingStatusName}
-              </p>
-            </p>
-            <p className='flex items-center gap-2'>
-              <strong>Trạng thái thanh toán:</strong>{' '}
-              <p
-                style={{
-                  backgroundColor: getPaymentStatusColor(
-                    booking.paymentStatusName
-                  ),
-                }}
-                className='px-6 py-1 rounded-full text-white'
-              >
-                {booking.paymentStatusName}
-              </p>
-            </p>
-            <p>
-              <strong>Thời gian thuê phòng:</strong>{' '}
-              {booking.roomRentalTime ? `${booking.roomRentalTime} giờ` : 'N/A'}
-            </p>
-          </div>
-        </div>
-
-        {booking.serviceBookingDetails?.length > 0 && (
-          <div>
-            <h3 className='text-xl text-secondary-light font-semibold mb-4 mt-8'>
-              Dịch vụ đã đặt
-            </h3>
-            <table className='w-full border-collapse border border-gray-300 mb-4'>
-              <thead>
-                <tr className='bg-gray-100'>
-                  <th className='border border-gray-300 p-2'>Dịch vụ</th>
-                  <th className='border border-gray-300 p-2'>Cân nặng</th>
-                  <th className='border border-gray-300 p-2'>Giá</th>
-                </tr>
-              </thead>
-              <tbody>
-                {booking.serviceBookingDetails.map((service, index) => (
-                  <tr key={index} className='text-center'>
-                    <td className='border border-gray-300 p-2'>
-                      {service.serviceItemName}
-                    </td>
-                    <td className='border border-gray-300 p-2'>
-                      {service.petWeightRange}
-                    </td>
-                    <td className='border border-gray-300 p-2'>
-                      {formatCurrency(service.bookingItemPrice)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {/* Bảng combo dịch vụ đã đặt */}
-        {booking.serviceComboBookingDetails?.length > 0 && (
-          <div className='mt-4'>
-            <h3 className='font-semibold mb-2'>Combo dịch vụ đã đặt</h3>
-            <table className='w-full border-collapse border border-gray-300'>
-              <thead>
-                <tr className='bg-gray-100'>
-                  <th className='border border-gray-300 p-2'>Tên combo</th>
-                  <th className='border border-gray-300 p-2'>Giá</th>
-                </tr>
-              </thead>
-              <tbody>
-                {booking.serviceComboBookingDetails.map((combo, index) => (
-                  <tr key={index} className='text-center'>
-                    <td className='border border-gray-300 p-2'>
-                      {combo.comboName}
-                    </td>
-                    <td className='border border-gray-300 p-2'>
-                      {combo.comboPrice} VND
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {/* Bảng phòng đã đặt */}
-        {booking.roomBookingItem?.length > 0 && (
-          <div className='mt-4'>
-            <h3 className='font-semibold mb-2'>Phòng đã đặt</h3>
-            <table className='w-full border-collapse border border-gray-300'>
-              <thead>
-                <tr className='bg-gray-100'>
-                  <th className='border border-gray-300 p-2'>Tên phòng</th>
-                  <th className='border border-gray-300 p-2'>Giá</th>
-                </tr>
-              </thead>
-              <tbody>
-                {booking.roomBookingItem.map((room, index) => (
-                  <tr key={index} className='text-center'>
-                    <td className='border border-gray-300 p-2'>
-                      {room.roomName}
-                    </td>
-                    <td className='border border-gray-300 p-2'>
-                      {room.roomPrice} VND
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
       </div>
     </CustomModal>
   );

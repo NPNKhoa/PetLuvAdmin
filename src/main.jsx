@@ -1,4 +1,3 @@
-import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
 
@@ -20,6 +19,9 @@ import timezone from 'dayjs/plugin/timezone';
 
 import {
   Chart as ChartJS,
+  LineElement,
+  PointElement,
+  LineController,
   ArcElement,
   BarElement,
   CategoryScale,
@@ -33,6 +35,9 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 ChartJS.register(
+  LineElement,
+  PointElement,
+  LineController,
   ArcElement,
   BarElement,
   CategoryScale,

@@ -170,7 +170,7 @@ const ViewServiceDetailModal = ({ open, onClose, service }) => {
               service.serviceImageUrls.map((url, index) => (
                 <img
                   key={index}
-                  src={url}
+                  src={`http://localhost:5020${url}`}
                   alt={`Service ${index}`}
                   className='w-full aspect-square object-cover rounded-lg shadow-md'
                 />

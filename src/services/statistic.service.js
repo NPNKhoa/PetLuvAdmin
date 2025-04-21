@@ -8,12 +8,13 @@ class StatisticService {
   // BOOKING STATS
 
   async getServicesBookedRatio(params) {
-    const { startDate, endDate, month, year } = params;
+    const { startDate, endDate, month, year, serviceType = 'service' } = params;
     const query = new URLSearchParams({
       startDate: startDate ?? '',
       endDate: endDate ?? '',
       month: month ?? '',
       year: year ?? '',
+      serviceType,
     }).toString();
 
     try {
