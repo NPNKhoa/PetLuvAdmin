@@ -450,23 +450,6 @@ const AddBookingPage = () => {
             >
               Tạo
             </button>
-            <button
-              type='button'
-              onClick={() => {
-                console.log(values);
-                console.log(selectedType);
-              }}
-              className='w-1/2 mx-auto p-2 rounded-full bg-primary text-white translate-x-1/2 mt-16 block'
-            >
-              Log Values
-            </button>
-            <button
-              type='button'
-              onClick={() => console.log('Validation Errors:', errors)}
-              className='w-1/2 mx-auto p-2 rounded-full bg-primary text-white translate-x-1/2 mt-16 block'
-            >
-              Log Error
-            </button>
           </Form>
         )}
       </Formik>
