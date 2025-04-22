@@ -1,9 +1,10 @@
 import React from 'react';
+import UserPageContainer from '../components/UserPage/UserPageContainer';
 
 const UserPage = () => {
   return (
     <div>
-      <h1>UserPage</h1>
+      <UserPageContainer />
     </div>
   );
 };
