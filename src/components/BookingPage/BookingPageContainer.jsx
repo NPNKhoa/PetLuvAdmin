@@ -21,17 +21,18 @@ import { getUsers } from '../../redux/thunks/userThunk';
 import { Link } from 'react-router-dom';
 
 const paymentStatusColors = {
-  'Chờ thanh toán': '#FFA500', // Màu cam
-  'Đã đặt cọc': '#FFD700', // Màu vàng
-  'Đã thanh toán': '#008000', // Màu xanh lá
-  'Thanh toán thất bại': '#FF0000', // Màu đỏ
+  'Chờ thanh toán': '#FFA500',
+  'Đã đặt cọc': '#FFD700',
+  'Đã thanh toán': '#008000',
+  'Thanh toán thất bại': '#FF0000',
 };
 
 const bookingStatusColors = {
-  'Đã hủy': '#808080', // Màu xám
-  'Đã xác nhận': '#0000FF', // Màu xanh dương
-  'Đã hoàn thành': '#008000', // Màu xanh lá
-  'Đang xử lý': '#FFA500', // Màu cam
+  'Đã hủy': '#808080',
+  'Đã xác nhận': '#0000FF',
+  'Đã đặt cọc': '#FFD700',
+  'Đã hoàn thành': '#008000',
+  'Đang xử lý': '#FFA500',
 };
 
 // Hàm lấy màu theo trạng thái

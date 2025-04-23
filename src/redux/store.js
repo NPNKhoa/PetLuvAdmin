@@ -10,6 +10,7 @@ import serviceTypeReducer from './slices/serviceTypeSlice.js';
 import roomReducer from './slices/roomSlice.js';
 import roomTypeReducer from './slices/roomTypeSlice.js';
 import bookingReducer from './slices/bookingSlice.js';
+import paymentReducer from './slices/paymentSlice.js';
 import paymentStatusReducer from './slices/paymentStatusSlice.js';
 import bookingStatusReducer from './slices/bookingStatusSlice.js';
 import petReducer from './slices/petSlice.js';
@@ -26,7 +27,13 @@ import statisticsSlice from './slices/statisticSlice.js';
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['services', 'serviceTypes', 'paymentStatuses', 'bookingStatuses'],
+  whitelist: [
+    'services',
+    'serviceTypes',
+    'paymentStatuses',
+    'bookingStatuses',
+    'users',
+  ],
   //   transforms: [authUserFilter],
 };
 
@@ -36,6 +43,7 @@ const rootReducer = combineReducers({
   rooms: roomReducer,
   roomTypes: roomTypeReducer,
   bookings: bookingReducer,
+  payments: paymentReducer,
   paymentStatuses: paymentStatusReducer,
   bookingStatuses: bookingStatusReducer,
   pets: petReducer,

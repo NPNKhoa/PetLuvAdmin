@@ -13,6 +13,7 @@ import {
   togleAccountStatus,
 } from '../../redux/thunks/userThunk';
 import MyAlrt from '../../configs/alert/MyAlrt';
+import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 
 const columns = [
   {
@@ -71,6 +72,10 @@ const columns = [
 
 const UserPageContainer = () => {
   const dispatch = useDispatch();
+  const { search } = useLocation();
+  const params = useMemo(() => new URLSearchParams(search), [search]);
+
+  const userId = useMemo(() => params.get('userId'), [params]);
 
   // This would be replaced with actual Redux state once you create the user slice
   const users = useSelector((state) => state.users.users);
@@ -162,7 +167,19 @@ const UserPageContainer = () => {
 
   useEffect(() => {
     dispatch(getUsers());
-  }, [dispatch]);
+
+    if (userId) {
+      dispatch(getUserById(userId))
+        .unwrap()
+        .then(() => setViewModalOpen(true))
+        .catch((error) => {
+          toast.error(
+            error?.message || error || 'Có lỗi xảy ra, vui lòng thử lại sau'
+          );
+          console.log(error);
+        });
+    }
+  }, [dispatch, userId]);
 
   return (
     <div className='p-6'>

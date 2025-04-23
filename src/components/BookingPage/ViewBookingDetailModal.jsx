@@ -29,6 +29,7 @@ const paymentStatusColors = {
 const bookingStatusColors = {
   'Đã hủy': '#808080',
   'Đã xác nhận': '#0000FF',
+  'Đã đặt cọc': '#FFD700',
   'Đã hoàn thành': '#008000',
   'Đang xử lý': '#FFA500',
 };

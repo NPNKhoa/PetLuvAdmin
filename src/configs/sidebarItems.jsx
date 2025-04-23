@@ -5,11 +5,17 @@ import {
 } from 'react-icons/ri';
 import { MdDashboard } from 'react-icons/md';
 import { FaUsers, FaDog, FaUserLock, FaChartPie } from 'react-icons/fa6';
+import { FaMoneyBillAlt } from 'react-icons/fa';
 import { IoGrid } from 'react-icons/io5';
 import { BiSolidCategory } from 'react-icons/bi';
 
 export default [
   { name: 'Trang chủ', icon: <FaChartPie size={20} />, path: '/' },
+  {
+    name: 'Quản lý Booking',
+    icon: <RiCalendarScheduleFill size={20} />,
+    path: '/quan-ly-booking',
+  },
   {
     name: 'Quản lý Dịch vụ',
     icon: <RiServiceFill size={20} />,
@@ -36,9 +42,9 @@ export default [
     path: '/quan-ly-nguoi-dung',
   },
   {
-    name: 'Quản lý Booking',
-    icon: <RiCalendarScheduleFill size={20} />,
-    path: '/quan-ly-booking',
+    name: 'Quản lý Thanh toán',
+    icon: <FaMoneyBillAlt size={20} />,
+    path: '/quan-ly-thanh-toan',
   },
   {
     name: 'Quản lý Danh mục',

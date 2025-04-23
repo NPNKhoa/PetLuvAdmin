@@ -11,12 +11,18 @@ import {
   ServicePage,
   UserPage,
 } from '../pages';
+import PaymentPage from '../pages/PaymentPage';
 
 export default [
   {
     id: `admin-route-${uuidv4()}`,
     path: '/',
     element: <HomePage />,
+  },
+  {
+    id: `admin-route-${uuidv4()}`,
+    path: '/quan-ly-booking',
+    element: <BookingPage />,
   },
   {
     id: `admin-route-${uuidv4()}`,
@@ -50,8 +56,8 @@ export default [
   },
   {
     id: `admin-route-${uuidv4()}`,
-    path: '/quan-ly-booking',
-    element: <BookingPage />,
+    path: '/quan-ly-thanh-toan',
+    element: <PaymentPage />,
   },
   {
     id: `admin-route-${uuidv4()}`,
