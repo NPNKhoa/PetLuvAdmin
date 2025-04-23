@@ -16,8 +16,18 @@ import {
   FaInfoCircle,
   FaRegStickyNote,
 } from 'react-icons/fa';
-import { MdEmail, MdPhone, MdPayment, MdRoomService } from 'react-icons/md';
+import {
+  MdEmail,
+  MdPhone,
+  MdPayment,
+  MdRoomService,
+  MdSettings,
+} from 'react-icons/md';
 import { BsClockHistory } from 'react-icons/bs';
+import { getBookings, updateBooking } from '../../redux/thunks/bookingThunk';
+import MyAlrt from '../../configs/alert/MyAlrt';
+import { useEffect, useState } from 'react';
+import { updateStatus } from '../../redux/thunks/paymentThunk';
 
 const paymentStatusColors = {
   'Chờ thanh toán': '#FFA500',
@@ -45,18 +55,125 @@ function getBookingStatusColor(bookingStatusName) {
 const ViewBookingDetailModal = ({ open, onClose, booking }) => {
   const dispatch = useDispatch();
 
+  const [isOpen, setIsOpen] = useState(open);
+
   const fetchedPet = useSelector((state) => state.pets.pet);
   const fetchedUser = useSelector((state) => state.users.user);
 
+  const bookingStatuses = useSelector(
+    (state) => state.bookingStatuses.bookingStatuses
+  );
+  const paymentStatuses = useSelector(
+    (state) => state.paymentStatuses.paymentStatuses
+  );
+
+  const getBookingStatusId = (name) => {
+    const status = bookingStatuses.find(
+      (status) => status.bookingStatusName === name
+    );
+    return status ? status.bookingStatusId : null;
+  };
+
+  const handleConfirmPayment = () => {
+    const status = paymentStatuses.find(
+      (status) => status.paymentStatusName === 'Đã thanh toán'
+    );
+
+    if (!status) {
+      return;
+    }
+
+    dispatch(
+      updateBooking({
+        bookingId: booking.bookingId,
+        payload: {
+          ...booking,
+          paymentStatusId: status.paymentStatusId,
+        },
+      })
+    )
+      .unwrap()
+      .then(() => {
+        MyAlrt.Success('Thành công', 'Cập nhật lịch hẹn thành công', 'OK');
+        dispatch(
+          updateStatus({
+            id: booking.bookingId,
+            payload: { amount: booking.totalAmount, isComplete: true },
+          })
+        )
+          .unwrap()
+          .then(() => {
+            MyAlrt.Success(
+              'Thành công',
+              'Cập nhật trạng thái thanh toán thành công',
+              'OK'
+            );
+
+            dispatch(getBookings());
+
+            setIsOpen(false);
+            onClose();
+          })
+          .catch((error) => {
+            console.log(error);
+            MyAlrt.Error(
+              'Lỗi',
+              `Cập nhật trạng thái thanh toán thất bại. ${
+                error.message || error
+              }`,
+              'OK'
+            );
+          });
+      })
+      .catch((e) => {
+        MyAlrt.Error(e.message || e || 'Có lỗi xảy ra, vui lòng thử lại sau!');
+        onClose();
+      });
+  };
+
+  const handleChangeBookingStatus = (e) => {
+    const bookingStatusId = getBookingStatusId(e.target.name);
+
+    if (!bookingStatusId) {
+      return;
+    }
+
+    dispatch(
+      updateBooking({
+        bookingId: booking.bookingId,
+        payload: {
+          ...booking,
+          bookingStatusId,
+        },
+      })
+    )
+      .unwrap()
+      .then(() => {
+        MyAlrt.Success('Thành công', 'Cập nhật lịch hẹn thành công', 'OK');
+        dispatch(getBookings());
+        onClose();
+      })
+      .catch((e) => {
+        MyAlrt.Error(
+          'Lỗi',
+          e.message || e || 'Có lỗi xảy ra, vui lòng thử lại sau!',
+          'OK'
+        ) === true;
+        onClose();
+      });
+  };
+
   const { pet, user } = booking;
 
-  if (!pet) {
-    dispatch(getPetById(booking?.petId));
-  }
+  useEffect(() => {
+    if (!pet && isOpen === true) {
+      dispatch(getPetById(booking?.petId));
+    }
 
-  if (!user) {
-    dispatch(getUserById(booking?.customerId));
-  }
+    if (!user && isOpen === true) {
+      dispatch(getUserById(booking?.customerId));
+    }
+  }, [pet, user, dispatch, onClose, booking, isOpen]);
 
   return (
     <CustomModal
@@ -437,6 +554,61 @@ const ViewBookingDetailModal = ({ open, onClose, booking }) => {
               </div>
             </div>
           )}
+        </div>
+
+        <Divider className='my-4' />
+
+        {/* Actions */}
+        <div className='p-6'>
+          <h2 className='text-2xl text-primary font-bold flex items-center gap-2 mb-4'>
+            <MdSettings className='text-primary' /> Thao tác
+          </h2>
+
+          {/* Below should be write to two columns like the above section. Each column includes some buttons */}
+          <div className='grid grid-cols-1 md:grid-cols-2 w-full md:w-2/3 mx-auto gap-6 bg-gray-100 py-16 rounded-xl'>
+            {console.log(booking.bookingStatus?.bookingStatusName)}
+            <div className='flex flex-col space-y-4 items-center'>
+              {booking.bookingStatus?.bookingStatusName === 'Đang xử lý' ||
+              booking.bookingStatus?.bookingStatusName === 'Đã đặt cọc' ? (
+                <button
+                  name='Đã xác nhận'
+                  className='bg-primary w-2/3 text-white py-3 px-6 rounded-lg hover:bg-primary-dark'
+                  onClick={handleChangeBookingStatus}
+                >
+                  Xác nhận lịch hẹn
+                </button>
+              ) : null}
+
+              {booking.bookingStatus?.bookingStatusName === 'Đã xác nhận' && (
+                <button
+                  name='Đã hoàn thành'
+                  className='bg-green-500 w-2/3 text-white py-3 px-6 rounded-lg hover:bg-green-600'
+                  onClick={handleChangeBookingStatus}
+                >
+                  Hoàn thành
+                </button>
+              )}
+
+              {booking.bookingStatus?.bookingStatusName === 'Đã hủy' || (
+                <button
+                  name='Đã hủy'
+                  className='bg-red-500 w-2/3 text-white py-3 px-6 rounded-lg hover:bg-red-600 mt-auto'
+                  onClick={handleChangeBookingStatus}
+                >
+                  Hủy lịch hẹn
+                </button>
+              )}
+            </div>
+
+            <div className='flex flex-col'>
+              <button
+                className='bg-secondary-light w-4/5 m-auto text-white py-3 px-6 rounded-lg hover:bg-secondary'
+                onClick={handleConfirmPayment}
+              >
+                Hoàn thành thanh toán
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </CustomModal>
