@@ -95,6 +95,7 @@ const ViewComboDetailModal = ({ open, onClose, combo }) => {
       serviceComboId: variant.serviceComboId,
       breedId: variant.breedId,
       weightRange: variant.weightRange,
+      comboPrice: variant.price,
     };
     dispatch(deleteComboVariant(payload))
       .unwrap()

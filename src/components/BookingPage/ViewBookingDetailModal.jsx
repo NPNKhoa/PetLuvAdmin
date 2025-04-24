@@ -28,6 +28,7 @@ import { getBookings, updateBooking } from '../../redux/thunks/bookingThunk';
 import MyAlrt from '../../configs/alert/MyAlrt';
 import { useEffect, useState } from 'react';
 import { updateStatus } from '../../redux/thunks/paymentThunk';
+import { getBookingStatuses } from '../../redux/thunks/bookingStatusThunk';
 
 const paymentStatusColors = {
   'Chờ thanh toán': '#FFA500',
@@ -68,6 +69,10 @@ const ViewBookingDetailModal = ({ open, onClose, booking }) => {
   );
 
   const getBookingStatusId = (name) => {
+    if (!Array.isArray(bookingStatuses) || bookingStatuses.length === 0) {
+      dispatch(getBookingStatuses());
+    }
+
     const status = bookingStatuses.find(
       (status) => status.bookingStatusName === name
     );
@@ -133,6 +138,8 @@ const ViewBookingDetailModal = ({ open, onClose, booking }) => {
 
   const handleChangeBookingStatus = (e) => {
     const bookingStatusId = getBookingStatusId(e.target.name);
+    console.log(e.target.name);
+    console.log(bookingStatusId);
 
     if (!bookingStatusId) {
       return;
@@ -503,11 +510,12 @@ const ViewBookingDetailModal = ({ open, onClose, booking }) => {
                         key={index}
                         className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
                       >
+                        {console.log(combo)}
                         <td className='border border-gray-300 p-3'>
-                          {combo.comboName}
+                          {combo.serviceComboItemName}
                         </td>
                         <td className='border border-gray-300 p-3 text-right font-medium'>
-                          {formatCurrency(combo.comboPrice)}
+                          {formatCurrency(combo.bookingItemPrice)}
                         </td>
                       </tr>
                     ))}

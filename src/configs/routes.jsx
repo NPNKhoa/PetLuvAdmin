@@ -12,6 +12,7 @@ import {
   UserPage,
 } from '../pages';
 import PaymentPage from '../pages/PaymentPage';
+import CategoriesPage from '../pages/CategoriesPage';
 
 export default [
   {
@@ -66,7 +67,7 @@ export default [
   },
   {
     id: `admin-route-${uuidv4()}`,
-    path: '/quan-ly-phan-quyen',
-    element: <AuthorPage />,
+    path: '/quan-ly-danh-muc',
+    element: <CategoriesPage />,
   },
 ];
