@@ -16,6 +16,8 @@ import {
   resetSelectedCombo,
   setSelectedCombo,
 } from '../../redux/slices/comboSlice';
+import { getComboVariants } from '../../redux/thunks/comboVariantThunk';
+import { resetVariants } from '../../redux/slices/serviceVariantSlice';
 
 const columns = [
   {
@@ -165,8 +167,20 @@ const ComboPageContainer = () => {
   };
 
   const handleViewDetail = (params) => {
-    combo && dispatch(getComboById(params.id));
-    setViewModalOpen(true);
+    dispatch(resetVariants());
+    combo &&
+      dispatch(getComboById(params.id))
+        .unwrap()
+        .then(() => {
+          dispatch(getComboVariants(params.id));
+          setViewModalOpen(true);
+        })
+        .catch((error) => {
+          console.log(error);
+          toast.error(
+            error.message || error || 'Có lỗi xảy ra. Vui lòng thử lại sau'
+          );
+        });
   };
 
   useEffect(() => {

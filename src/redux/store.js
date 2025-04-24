@@ -16,11 +16,13 @@ import bookingStatusReducer from './slices/bookingStatusSlice.js';
 import petReducer from './slices/petSlice.js';
 import userReducer from './slices/userSlice.js';
 import comboReducer from './slices/comboSlice.js';
+import comboVariants from './slices/comboVariantSlice.js';
 import petBreedReducer from './slices/petBreedSlice.js';
 import walkDogVariantReducer from './slices/walkDogVariantSlice.js';
 import serviceVariantsSlice from './slices/serviceVariantSlice.js';
 import bookingTypeSlice from './slices/bookingTypeSlice.js';
 import statisticsSlice from './slices/statisticSlice.js';
+
 import stripLoadingAndError from './persistTransforms.js';
 
 // const authUserFilter = createFilter('auth', ['user']);
@@ -51,6 +53,7 @@ const rootReducer = combineReducers({
   pets: petReducer,
   users: userReducer,
   combos: comboReducer,
+  comboVariants: comboVariants,
   petBreeds: petBreedReducer,
   serviceVariants: serviceVariantsSlice,
   walkDogVariants: walkDogVariantReducer,

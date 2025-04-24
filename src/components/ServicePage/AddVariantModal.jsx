@@ -52,6 +52,7 @@ const AddVariantModal = ({ open, onClose, serviceId, onAddVariant }) => {
       );
 
       onClose();
+      formik.resetForm();
     },
   });
 

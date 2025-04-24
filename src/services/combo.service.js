@@ -29,8 +29,9 @@ class ComboService {
   }
 
   async getVariants(comboId) {
+    console.log(comboId);
     try {
-      const response = await this.api.get(`${comboId}/service-variants`);
+      const response = await this.api.get(`${comboId}/service-combo-variants`);
       return response;
     } catch (error) {
       console.log(error);
