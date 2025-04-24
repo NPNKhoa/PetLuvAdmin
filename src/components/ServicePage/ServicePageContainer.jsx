@@ -4,6 +4,7 @@ import { Search, Add, Edit, Delete } from '@mui/icons-material';
 import DataTable from '../common/DataTable';
 import { useDispatch } from 'react-redux';
 import { deleteService, getServices } from '../../redux/thunks/serviceThunk';
+import { getServiceVairantByService } from '../../redux/thunks/serviceVariantThunk';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import CreateServiceFormModal from './CreateServiceFormModal';
@@ -150,6 +151,7 @@ const ServicePageContainer = () => {
 
   const handleViewDetail = (params) => {
     dispatch(setSelectedService(params.id));
+    dispatch(getServiceVairantByService(params.id));
     setViewModalOpen(true);
   };
 

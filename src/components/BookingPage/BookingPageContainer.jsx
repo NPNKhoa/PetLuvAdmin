@@ -282,12 +282,12 @@ const BookingPageContainer = () => {
           >
             <Add /> Thêm
           </Link>
-          <button
+          {/* <button
             className='bg-blue-600 rounded-lg px-9 py-3 text-white font-medium hover:bg-secondary-light'
             onClick={handleUpdate}
           >
             <Edit /> Cập nhật
-          </button>
+          </button> */}
           {/* <button
             className='bg-red-600 rounded-lg px-9 py-3 text-white font-medium hover:bg-red-700'
             onClick={handleDelete}

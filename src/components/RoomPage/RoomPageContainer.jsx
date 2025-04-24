@@ -45,7 +45,7 @@ const columns = [
   {
     field: 'isVisible',
     headerName: 'Trạng thái',
-    flex: 1,
+    flex: 1.5,
     align: 'center',
     headerAlign: 'center',
     renderCell: (params) => {

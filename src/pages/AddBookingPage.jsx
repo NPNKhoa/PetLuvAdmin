@@ -14,7 +14,6 @@ import { getPetByUser } from '../redux/thunks/petThunk';
 import PetSelection from '../components/AddBookingPage/PetSelection';
 import { getServices } from '../redux/thunks/serviceThunk';
 import SelectedServiceContainer from '../components/AddBookingPage/SelectedServiceContainer';
-import { getServiceVairantById } from '../redux/thunks/serviceVariantThunk';
 import { resetVariants } from '../redux/slices/serviceVariantSlice';
 import { getWalkDogVariantByServiceId } from '../redux/thunks/walkDogVariantThunk';
 import { resetWDVariants } from '../redux/slices/walkDogVariantSlice';
@@ -22,6 +21,7 @@ import { getBookingTypes } from '../redux/thunks/bookingTypeThunk';
 import { createBooking } from '../redux/thunks/bookingThunk';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { getServiceVairantByService } from '../redux/thunks/serviceVariantThunk';
 
 // Yup validation schema
 const validationSchema = Yup.object().shape({
@@ -197,7 +197,7 @@ const AddBookingPage = () => {
     if (service?.serviceTypeName?.toLowerCase()?.includes('dắt chó')) {
       dispatch(getWalkDogVariantByServiceId(serviceId));
     } else {
-      dispatch(getServiceVairantById(serviceId));
+      dispatch(getServiceVairantByService(serviceId));
     }
 
     setSelectedService(service);

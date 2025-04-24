@@ -1,6 +1,6 @@
 import ApiService from './api.service';
 
-class ServicesService {
+class ServiceVariantService {
   constructor() {
     this.api = new ApiService('http://localhost:5020/api/service-variants/');
   }
@@ -18,7 +18,7 @@ class ServicesService {
     }
   }
 
-  async getById(serviceId) {
+  async getByService(serviceId) {
     try {
       const response = await this.api.get(
         `/api/services/${serviceId}/service-variants`
@@ -40,15 +40,15 @@ class ServicesService {
     }
   }
 
-  //   async deleteAsync(serviceId) {
-  //     try {
-  //       const response = await this.api.delete(`${serviceId}`);
-  //       return response;
-  //     } catch (error) {
-  //       console.log(error);
-  //       throw error;
-  //     }
-  //   }
+  async deleteAsync(payload) {
+    const { serviceId, breedId, petWeightRange } = payload;
+    try {
+      return await this.api.delete(`${serviceId}/${breedId}/${petWeightRange}`);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 
   async updateAsync(payload) {
     const { serviceId, breedId, petWeightRange, body } = payload;
@@ -66,4 +66,4 @@ class ServicesService {
   }
 }
 
-export default new ServicesService();
+export default new ServiceVariantService();

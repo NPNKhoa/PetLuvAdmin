@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux';
 import { getPetBreeds } from '../../redux/thunks/petBreedThunk';
 import {
   createServiceVariant,
-  getServiceVairantById,
+  deleteServiceVariant,
   updateServiceVariant,
 } from '../../redux/thunks/serviceVariantThunk';
 import { toast } from 'react-toastify';
@@ -33,7 +33,6 @@ const ViewServiceDetailModal = ({ open, onClose, service }) => {
   const [showAddVariantModal, setShowAddVariantModal] = useState(false);
   const [showEditVariantModal, setShowEditVariantModal] = useState(false);
 
-  const [variants, setVariants] = useState(service.serviceVariants || []);
   const [selectedVariant, setSelectedVariant] = useState(null);
 
   const [showMore, setShowMore] = useState(false);
@@ -42,6 +41,10 @@ const ViewServiceDetailModal = ({ open, onClose, service }) => {
 
   const walkDogVariants = useSelector(
     (state) => state.walkDogVariants.walkDogVariants
+  );
+
+  const serviceVariants = useSelector(
+    (state) => state.serviceVariants.serviceVariants
   );
 
   useEffect(() => {
@@ -103,7 +106,6 @@ const ViewServiceDetailModal = ({ open, onClose, service }) => {
         })
         .catch((e) => toast.error(e.message || e));
 
-      setVariants([...variants, newVariant]);
       return;
     }
 
@@ -114,11 +116,10 @@ const ViewServiceDetailModal = ({ open, onClose, service }) => {
         toast.success('Thêm mới biến thể thành công');
       })
       .catch((e) => toast.error(e));
-
-    setVariants([...variants, newVariant]);
   };
 
   const handleOpenEditVariantModal = (variant) => {
+    dispatch(getPetBreeds());
     setSelectedVariant(variant);
     setShowEditVariantModal(true);
   };
@@ -143,6 +144,23 @@ const ViewServiceDetailModal = ({ open, onClose, service }) => {
       .catch((e) => {
         console.log(e);
         toast.error(e);
+      });
+  };
+
+  const handleDeleteVariant = (variant) => {
+    const payload = {
+      serviceId: variant.serviceId,
+      breedId: variant.breedId,
+      petWeightRange: variant.petWeightRange,
+    };
+    dispatch(deleteServiceVariant(payload))
+      .unwrap()
+      .then((data) => {
+        toast.success('Xóa biến thể thành công');
+      })
+      .catch((e) => {
+        console.log(e);
+        toast.error(e?.message || e || 'Có lỗi xảy ra, vui long thử lại sau');
       });
   };
 
@@ -250,15 +268,14 @@ const ViewServiceDetailModal = ({ open, onClose, service }) => {
         <div className='pt-2'>
           <div className='grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4'>
             {!service.serviceTypeName.toLowerCase().includes('dắt chó') ? (
-              service.serviceVariants?.length > 0 ? (
-                service.serviceVariants.map((variant, index) => (
+              serviceVariants?.length > 0 ? (
+                serviceVariants.map((variant, index) => (
                   <div
                     key={index}
                     className='relative border rounded-lg p-4 shadow bg-gray-50'
                   >
                     {/* Nội dung biến thể */}
                     <div className='space-y-1'>
-                      {console.log(variant)}
                       <div className='flex items-center justify-between my-1'>
                         <p>
                           <strong>Giống:</strong> {variant.breedName}
@@ -296,7 +313,10 @@ const ViewServiceDetailModal = ({ open, onClose, service }) => {
                           >
                             <Edit />
                           </IconButton>
-                          <IconButton color='error'>
+                          <IconButton
+                            color='error'
+                            onClick={() => handleDeleteVariant(variant)}
+                          >
                             <Delete />
                           </IconButton>
                         </div>
@@ -349,7 +369,10 @@ const ViewServiceDetailModal = ({ open, onClose, service }) => {
                         >
                           <Edit />
                         </IconButton>
-                        <IconButton color='error'>
+                        <IconButton
+                          color='error'
+                          onClick={() => handleDeleteVariant(variant)}
+                        >
                           <Delete />
                         </IconButton>
                       </div>

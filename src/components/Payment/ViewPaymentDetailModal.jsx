@@ -123,7 +123,7 @@ const ViewPaymentDetailModal = ({ open, onClose, payment }) => {
           </div>
           <Grid container spacing={3} className='mt-8'>
             {/* Left Column - Basic Info */}
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={5}>
               <Box className='space-y-4'>
                 <Box className='flex items-center space-x-2'>
                   <Receipt className='text-primary' />
@@ -166,18 +166,18 @@ const ViewPaymentDetailModal = ({ open, onClose, payment }) => {
             </Grid>
 
             {/* Right Column - Payment Details */}
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={7}>
               <Box className='space-y-4'>
                 <div className='flex items-center justify-between space-x-2'>
                   <div className='flex items-center justify-start gap-1'>
                     <AttachMoney className='text-primary' />
-                    <span className='font-medium text-lg'>Số tiền:</span>{' '}
+                    <span className='font-medium text-md'>Số tiền:</span>{' '}
                     <h6 className='font-bold text-xl text-primary'>
                       {formatCurrency(payment.amount)}
                     </h6>
                   </div>
                   <h2
-                    className={`ml-10 px-12 py-2 rounded-full text-lg font-semibold max-w-fit ${getStatusStyles(
+                    className={`ml-10 px-12 py-2 rounded-full text-md font-semibold max-w-fit ${getStatusStyles(
                       payment.paymentStatus?.paymentStatusName
                     )}`}
                   >
@@ -187,12 +187,12 @@ const ViewPaymentDetailModal = ({ open, onClose, payment }) => {
 
                 <Box className='flex items-center space-x-2'>
                   <Payment className='text-primary' />
-                  <Typography variant='body1'>
+                  <div className='flex items-center justify-between w-full space-x-2'>
                     <span className='font-medium'>Phương thức thanh toán:</span>{' '}
-                    <span className='bg-secondary text-white rounded-full px-6 py-1'>
+                    <span className='bg-secondary text-white rounded-full px-6 py-2'>
                       {payment.paymentMethod?.paymentMethodName}
                     </span>
-                  </Typography>
+                  </div>
                 </Box>
               </Box>
             </Grid>

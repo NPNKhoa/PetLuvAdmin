@@ -21,8 +21,10 @@ import walkDogVariantReducer from './slices/walkDogVariantSlice.js';
 import serviceVariantsSlice from './slices/serviceVariantSlice.js';
 import bookingTypeSlice from './slices/bookingTypeSlice.js';
 import statisticsSlice from './slices/statisticSlice.js';
+import stripLoadingAndError from './persistTransforms.js';
 
 // const authUserFilter = createFilter('auth', ['user']);
+// const servicesFilter = createFilter('services', ['services']);
 
 const persistConfig = {
   key: 'root',
@@ -34,7 +36,7 @@ const persistConfig = {
     'bookingStatuses',
     'users',
   ],
-  //   transforms: [authUserFilter],
+  transforms: [stripLoadingAndError],
 };
 
 const rootReducer = combineReducers({

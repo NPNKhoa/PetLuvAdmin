@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
   createServiceVariant,
-  getServiceVairantById,
+  deleteServiceVariant,
+  getServiceVairantByService,
   getServiceVariants,
   updateServiceVariant,
 } from '../thunks/serviceVariantThunk';
@@ -37,16 +38,16 @@ const serviceVariantsSlice = createSlice({
         state.error = action.payload;
       });
 
-    // Get By Id
+    // Get By Service
     builder
-      .addCase(getServiceVairantById.pending, (state) => {
+      .addCase(getServiceVairantByService.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getServiceVairantById.fulfilled, (state, action) => {
+      .addCase(getServiceVairantByService.fulfilled, (state, action) => {
         state.loading = false;
         state.serviceVariants = action.payload;
       })
-      .addCase(getServiceVairantById.rejected, (state, action) => {
+      .addCase(getServiceVairantByService.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
@@ -73,9 +74,10 @@ const serviceVariantsSlice = createSlice({
       .addCase(updateServiceVariant.fulfilled, (state, action) => {
         state.loading = false;
         const updatedServiceVariant = action.payload;
+
         state.serviceVariants = state.serviceVariants.map((serviceVariant) =>
-          serviceVariant.serviceVariantId ===
-          updatedServiceVariant.serviceVariantId
+          serviceVariant.breedId === updatedServiceVariant.breedId &&
+          serviceVariant.petWeightRange === updatedServiceVariant.petWeightRange
             ? updatedServiceVariant
             : serviceVariant
         );
@@ -85,32 +87,48 @@ const serviceVariantsSlice = createSlice({
         state.error = action.payload;
       });
 
-    // // Delete
-    // builder
-    //   .addCase(deleteServiceVariant.pending, (state) => {
-    //     state.loading = true;
-    //   })
-    //   .addCase(deleteServiceVariant.fulfilled, (state, action) => {
-    //     state.loading = false;
-    //     const updatedServiceVariant = action.payload;
+    // Delete
+    builder
+      .addCase(deleteServiceVariant.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteServiceVariant.fulfilled, (state, action) => {
+        state.loading = false;
+        const deletedServiceVariant = action.payload;
 
-    //     if (!updatedServiceVariant.isVisible) {
-    //       state.serviceVariants = state.serviceVariants.map((serviceVariant) =>
-    //         serviceVariant.serviceVariantId === updatedServiceVariant.serviceVariantId
-    //           ? updatedServiceVariant
-    //           : serviceVariant
-    //       );
-    //     } else {
-    //       console.log(updatedServiceVariant);
-    //       state.serviceVariants = state.serviceVariants.filter(
-    //         (serviceVariant) => serviceVariant.serviceVariantId !== updatedServiceVariant.serviceVariantId
-    //       );
-    //     }
-    //   })
-    //   .addCase(deleteServiceVariant.rejected, (state, action) => {
-    //     state.loading = false;
-    //     state.error = action.payload;
-    //   });
+        const deletingVariant = state.serviceVariants.find(
+          (serviceVariant) =>
+            serviceVariant.serviceId === deletedServiceVariant.serviceId &&
+            serviceVariant.breedId === deletedServiceVariant.breedId &&
+            serviceVariant.petWeightRange ===
+              deletedServiceVariant.petWeightRange
+        );
+
+        if (deletingVariant.isVisible) {
+          state.serviceVariants = state.serviceVariants.map((serviceVariant) =>
+            serviceVariant.serviceId === deletedServiceVariant.serviceId &&
+            serviceVariant.breedId === deletedServiceVariant.breedId &&
+            serviceVariant.petWeightRange ===
+              deletedServiceVariant.petWeightRange
+              ? deletedServiceVariant
+              : serviceVariant
+          );
+        } else {
+          const index = state.serviceVariants.findIndex(
+            (serviceVariant) =>
+              serviceVariant.serviceId !== deletedServiceVariant.serviceId &&
+              serviceVariant.breedId !== deletedServiceVariant.breedId &&
+              serviceVariant.petWeightRange !==
+                deletedServiceVariant.petWeightRange
+          );
+
+          state.serviceVariants.splice(index, 1);
+        }
+      })
+      .addCase(deleteServiceVariant.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 

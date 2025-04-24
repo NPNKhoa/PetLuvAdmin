@@ -117,10 +117,9 @@ const ComboPageContainer = () => {
   );
 
   const handleAdd = () => {
-    // Pre-fetch room type
     !Array.isArray(services) ||
       (services.length === 0 &&
-        dispatch(getServices({ pageIndex: 1, pageSize: 10 })));
+        dispatch(getServices({ pageIndex: 1, pageSize: 100 })));
 
     setCreateModalOpen(true);
   };
