@@ -66,6 +66,17 @@ class UserService {
       throw error;
     }
   }
+
+  async login(credentials) {
+    const { email, password } = credentials;
+
+    try {
+      const response = await this.api.post('/api/login', { email, password });
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 export default new UserService();

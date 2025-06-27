@@ -18,7 +18,7 @@ const ViewRoomDetailModal = ({ open, onClose, room }) => {
               room.roomImages.map((image, index) => (
                 <img
                   key={index}
-                  src={`${import.meta.env.VITE_API_BASE_URL}${image}`}
+                  src={`http://localhost:5030/${image}`}
                   alt={`Room ${room.roomName} - ${index + 1}`}
                   className='w-32 h-32 object-cover rounded-lg shadow-md'
                 />

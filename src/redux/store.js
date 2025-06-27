@@ -22,6 +22,7 @@ import walkDogVariantReducer from './slices/walkDogVariantSlice.js';
 import serviceVariantsSlice from './slices/serviceVariantSlice.js';
 import bookingTypeSlice from './slices/bookingTypeSlice.js';
 import statisticsSlice from './slices/statisticSlice.js';
+import authReducer from './slices/authSlice.js';
 
 import stripLoadingAndError from './persistTransforms.js';
 
@@ -37,6 +38,7 @@ const persistConfig = {
     'paymentStatuses',
     'bookingStatuses',
     'users',
+    'auth',
   ],
   transforms: [stripLoadingAndError],
 };
@@ -52,6 +54,7 @@ const rootReducer = combineReducers({
   bookingStatuses: bookingStatusReducer,
   pets: petReducer,
   users: userReducer,
+  auth: authReducer,
   combos: comboReducer,
   comboVariants: comboVariants,
   petBreeds: petBreedReducer,

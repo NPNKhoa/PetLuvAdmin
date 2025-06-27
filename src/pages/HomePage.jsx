@@ -25,6 +25,7 @@ import {
   FiChevronDown,
 } from 'react-icons/fi';
 import formatCurrency from '../utils/formatCurrency';
+import { Link } from 'react-router-dom';
 
 const validRatioTypes = [
   { value: 'services', label: 'Dịch vụ' },
@@ -49,6 +50,10 @@ const validMonth = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 const HomePage = () => {
   const currentDate = dayjs();
   const dispatch = useDispatch();
+
+  const loggedInUser = useSelector((state) => state.auth.user);
+
+  const userRole = useMemo(() => loggedInUser?.staffType, [loggedInUser]);
 
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
 
@@ -212,111 +217,112 @@ const HomePage = () => {
       </div>
 
       {/* Filter Section */}
-      <div className='bg-white rounded-lg shadow-md mb-8 overflow-hidden'>
-        <div
-          className='flex items-center justify-between p-4 bg-gray-50 border-b border-gray-200 cursor-pointer'
-          onClick={toggleFilterExpanded}
-        >
-          <div className='flex items-center'>
-            <FiFilter className='text-primary mr-2' size={20} />
-            <h2 className='text-xl text-secondary font-bold'>
-              Bộ lọc thống kê
-            </h2>
+      {userRole === 'admin' && (
+        <div className='bg-white rounded-lg shadow-md mb-8 overflow-hidden'>
+          <div
+            className='flex items-center justify-between p-4 bg-gray-50 border-b border-gray-200 cursor-pointer'
+            onClick={toggleFilterExpanded}
+          >
+            <div className='flex items-center'>
+              <FiFilter className='text-primary mr-2' size={20} />
+              <h2 className='text-xl text-secondary font-bold'>
+                Bộ lọc thống kê
+              </h2>
+            </div>
+            <div className='flex items-center'>
+              <button
+                onClick={(e) => {
+                  // e.stopPropagation();
+                  refreshFilter();
+                }}
+                className='mr-4 flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 transition-colors'
+              >
+                <FiRefreshCw size={16} />
+                <span>Làm mới</span>
+              </button>
+              <FiChevronDown
+                className={`text-gray-500 transition-transform duration-300 ${
+                  isFilterExpanded ? 'transform rotate-180' : ''
+                }`}
+                size={20}
+              />
+            </div>
           </div>
-          <div className='flex items-center'>
-            <button
-              onClick={(e) => {
-                // e.stopPropagation();
-                refreshFilter();
-              }}
-              className='mr-4 flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 transition-colors'
-            >
-              <FiRefreshCw size={16} />
-              <span>Làm mới</span>
-            </button>
-            <FiChevronDown
-              className={`text-gray-500 transition-transform duration-300 ${
-                isFilterExpanded ? 'transform rotate-180' : ''
-              }`}
-              size={20}
-            />
-          </div>
-        </div>
 
-        {isFilterExpanded && (
-          <div className='p-4 bg-white'>
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4'>
-              <div className='space-y-2'>
-                <label className='block text-sm font-medium text-gray-700'>
-                  Thống kê theo thời gian
-                </label>
-                <div className='flex items-center'>
-                  <FiCalendar className='text-gray-400 mr-2' size={18} />
-                  <Select
-                    className='w-full'
-                    value={typeOfStatisticTime}
-                    onChange={handleChangeTimeType}
-                  >
-                    {validTimeTypes?.map((item) => (
-                      <MenuItem key={item.value} value={item.value}>
-                        {item.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </div>
-              </div>
-
-              {typeOfStatisticTime === 'date' ? (
+          {isFilterExpanded && (
+            <div className='p-4 bg-white'>
+              <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4'>
                 <div className='space-y-2'>
                   <label className='block text-sm font-medium text-gray-700'>
-                    Khoảng thời gian
+                    Thống kê theo thời gian
                   </label>
-                  <SelectDateRange
-                    startDate={statisticRange.startDate}
-                    endDate={statisticRange.endDate}
-                    onChangeStart={handleChangeStartDate}
-                    onChangeEnd={handleChangeEndDate}
-                  />
+                  <div className='flex items-center'>
+                    <FiCalendar className='text-gray-400 mr-2' size={18} />
+                    <Select
+                      className='w-full'
+                      value={typeOfStatisticTime}
+                      onChange={handleChangeTimeType}
+                    >
+                      {validTimeTypes?.map((item) => (
+                        <MenuItem key={item.value} value={item.value}>
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </div>
                 </div>
-              ) : typeOfStatisticTime === 'month' ? (
-                <div className='space-y-2'>
-                  <label className='block text-sm font-medium text-gray-700'>
-                    Chọn tháng
-                  </label>
-                  <Select
-                    className='w-full'
-                    value={month}
-                    onChange={handleChangeMonth}
-                    displayEmpty
-                  >
-                    <MenuItem value={''}>-- Tháng --</MenuItem>
-                    {validMonth?.map((item) => (
-                      <MenuItem key={item} value={item}>
-                        Tháng {item}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </div>
-              ) : (
-                <div className='space-y-2'>
-                  <label className='block text-sm font-medium text-gray-700'>
-                    Chọn năm
-                  </label>
-                  <Select
-                    className='w-full'
-                    value={year}
-                    onChange={handleChangeYear}
-                  >
-                    {lastTenYears?.map((item) => (
-                      <MenuItem key={item} value={item}>
-                        Năm {item}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </div>
-              )}
 
-              {/* <div className='space-y-2'>
+                {typeOfStatisticTime === 'date' ? (
+                  <div className='space-y-2'>
+                    <label className='block text-sm font-medium text-gray-700'>
+                      Khoảng thời gian
+                    </label>
+                    <SelectDateRange
+                      startDate={statisticRange.startDate}
+                      endDate={statisticRange.endDate}
+                      onChangeStart={handleChangeStartDate}
+                      onChangeEnd={handleChangeEndDate}
+                    />
+                  </div>
+                ) : typeOfStatisticTime === 'month' ? (
+                  <div className='space-y-2'>
+                    <label className='block text-sm font-medium text-gray-700'>
+                      Chọn tháng
+                    </label>
+                    <Select
+                      className='w-full'
+                      value={month}
+                      onChange={handleChangeMonth}
+                      displayEmpty
+                    >
+                      <MenuItem value={''}>-- Tháng --</MenuItem>
+                      {validMonth?.map((item) => (
+                        <MenuItem key={item} value={item}>
+                          Tháng {item}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </div>
+                ) : (
+                  <div className='space-y-2'>
+                    <label className='block text-sm font-medium text-gray-700'>
+                      Chọn năm
+                    </label>
+                    <Select
+                      className='w-full'
+                      value={year}
+                      onChange={handleChangeYear}
+                    >
+                      {lastTenYears?.map((item) => (
+                        <MenuItem key={item} value={item}>
+                          Năm {item}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </div>
+                )}
+
+                {/* <div className='space-y-2'>
                 <label className='block text-sm font-medium text-gray-700'>
                   Loại thú cưng
                 </label>
@@ -335,111 +341,113 @@ const HomePage = () => {
                   </Select>
                 </div>
               </div> */}
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
 
       {/* Dashboard Summary Cards */}
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-        <div className='bg-white rounded-lg shadow-md p-4 border-l-4 border-blue-500'>
-          <div className='flex items-center'>
-            <div className='p-3 rounded-full bg-blue-100 text-blue-500 mr-4'>
-              <FiBarChart2 size={24} />
-            </div>
-            <div>
-              <p className='text-sm text-gray-500'>Tổng số dịch vụ</p>
-              <h3 className='text-xl font-bold'>
-                {bookedServicesLabels.length}
-              </h3>
-            </div>
-          </div>
-        </div>
-
-        <div className='bg-white rounded-lg shadow-md p-4 border-l-4 border-green-500'>
-          <div className='flex items-center'>
-            <div className='p-3 rounded-full bg-green-100 text-green-500 mr-4'>
-              <FiPieChart size={24} />
-            </div>
-            <div>
-              <p className='text-sm text-gray-500'>Tổng số giống thú cưng</p>
-              <h3 className='text-xl font-bold'>{breedRatioLabels.length}</h3>
+      {userRole === 'admin' && (
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+          <div className='bg-white rounded-lg shadow-md p-4 border-l-4 border-blue-500'>
+            <div className='flex items-center'>
+              <div className='p-3 rounded-full bg-blue-100 text-blue-500 mr-4'>
+                <FiBarChart2 size={24} />
+              </div>
+              <div>
+                <p className='text-sm text-gray-500'>Tổng số dịch vụ</p>
+                <h3 className='text-xl font-bold'>
+                  {bookedServicesLabels.length}
+                </h3>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className='bg-white rounded-lg shadow-md p-4 border-l-4 border-amber-500'>
-          <div className='flex items-center'>
-            <div className='p-3 rounded-full bg-amber-100 text-amber-500 mr-4'>
-              <FiDollarSign size={24} />
+          <div className='bg-white rounded-lg shadow-md p-4 border-l-4 border-green-500'>
+            <div className='flex items-center'>
+              <div className='p-3 rounded-full bg-green-100 text-green-500 mr-4'>
+                <FiPieChart size={24} />
+              </div>
+              <div>
+                <p className='text-sm text-gray-500'>Tổng số giống thú cưng</p>
+                <h3 className='text-xl font-bold'>{breedRatioLabels.length}</h3>
+              </div>
             </div>
-            <div>
-              <p className='text-sm text-gray-500'>Tổng doanh thu</p>
-              <h3 className='text-xl font-bold'>
-                {/* {revenueData.length > 0
+          </div>
+
+          <div className='bg-white rounded-lg shadow-md p-4 border-l-4 border-amber-500'>
+            <div className='flex items-center'>
+              <div className='p-3 rounded-full bg-amber-100 text-amber-500 mr-4'>
+                <FiDollarSign size={24} />
+              </div>
+              <div>
+                <p className='text-sm text-gray-500'>Tổng doanh thu</p>
+                <h3 className='text-xl font-bold'>
+                  {/* {revenueData.length > 0
                   ? new Intl.NumberFormat('vi-VN', {
                       style: 'currency',
                       currency: 'VND',
                     }).format(revenueData.reduce((a, b) => a + b, 0))
                   : '0 ₫'} */}
-                {formatCurrency(2710000)}
-              </h3>
+                  {formatCurrency(2710000)}
+                </h3>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Statistics Section */}
-      <section className='mb-8'>
-        <h2 className='text-2xl text-secondary font-bold tracking-wide mb-4 flex items-center'>
-          <FiBarChart2 className='mr-2' />
-          Thống kê hệ thống
-        </h2>
+      {userRole === 'admin' && (
+        <section className='mb-8'>
+          <h2 className='text-2xl text-secondary font-bold tracking-wide mb-4 flex items-center'>
+            <FiBarChart2 className='mr-2' />
+            Thống kê hệ thống
+          </h2>
 
-        {/* Revenue Chart - Full Width */}
-        <div className='mb-6'>
-          <RevenueStatistic
-            loading={revenueLoading}
-            data={revenueData} // revenueData
-            labels={revenueLabels}
-            typeOfStatisticTime={typeOfStatisticTime}
-            title={'Tổng doanh thu'}
-          />
-        </div>
+          <div className='mb-6'>
+            <RevenueStatistic
+              loading={revenueLoading}
+              data={revenueData} // revenueData
+              labels={revenueLabels}
+              typeOfStatisticTime={typeOfStatisticTime}
+              title={'Tổng doanh thu'}
+            />
+          </div>
 
-        {/* Two-column charts */}
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
-          <BookedServiceStatistic
-            loading={bookedServicesLoading}
-            data={bookedServicesData}
-            labels={bookedServicesLabels}
-            title={'Tỉ lệ dịch vụ được đặt'}
-            validRatioTypes={validRatioTypes}
-            ratioType={typeOfRatioStatistic}
-            handleChangeRatioType={handleChangeRatioType}
-          />
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
+            <BookedServiceStatistic
+              loading={bookedServicesLoading}
+              data={bookedServicesData}
+              labels={bookedServicesLabels}
+              title={'Tỉ lệ dịch vụ được đặt'}
+              validRatioTypes={validRatioTypes}
+              ratioType={typeOfRatioStatistic}
+              handleChangeRatioType={handleChangeRatioType}
+            />
 
-          <BookedBreedStatistic
-            loading={bookedBreedsLoading}
-            data={bookedBreedsData}
-            labels={bookedBreedsLabels}
-            title={'Tỉ lệ loài thú cưng được đặt'}
-          />
-        </div>
+            <BookedBreedStatistic
+              loading={bookedBreedsLoading}
+              data={bookedBreedsData}
+              labels={bookedBreedsLabels}
+              title={'Tỉ lệ loài thú cưng được đặt'}
+            />
+          </div>
 
-        {/* Breed Ratio Chart */}
-        <div className='mb-6'>
-          <BreedRatioStatistic
-            data={breedRatioData}
-            labels={breedRatioLabels}
-            loading={breedRatioLoading}
-            title={'Tỉ lệ giống thú cưng theo loài'}
-            validPetTypes={validPetTypes}
-            petType={petType}
-            handleChangePetType={handleChangePetType}
-          />
-        </div>
-      </section>
+          <div className='mb-6'>
+            <BreedRatioStatistic
+              data={breedRatioData}
+              labels={breedRatioLabels}
+              loading={breedRatioLoading}
+              title={'Tỉ lệ giống thú cưng theo loài'}
+              validPetTypes={validPetTypes}
+              petType={petType}
+              handleChangePetType={handleChangePetType}
+            />
+          </div>
+        </section>
+      )}
 
       {/* System Management Section */}
       <section className='mb-8'>
@@ -471,7 +479,7 @@ const HomePage = () => {
           {/* Quick Access Cards */}
           <div className='bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border border-gray-100'>
             <div className='flex items-center mb-4'>
-              <div className='p-3 rounded-full bg-indigo-100 text-indigo-600 mr-3'>
+              <div className='p-3 rounded-full bg-amber-100 text-amber-600 mr-3'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   className='h-6 w-6'
@@ -483,21 +491,18 @@ const HomePage = () => {
                     strokeLinecap='round'
                     strokeLinejoin='round'
                     strokeWidth={2}
-                    d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'
+                    d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'
                   />
                 </svg>
               </div>
-              <h3 className='text-lg font-semibold text-gray-800'>
-                Quản lý người dùng
-              </h3>
+              <h3 className='text-lg font-semibold text-gray-800'>Lịch đặt</h3>
             </div>
             <p className='text-gray-600 mb-4'>
-              Xem và quản lý tài khoản người dùng, phân quyền và thông tin cá
-              nhân.
+              Xem và quản lý các lịch đặt dịch vụ, phòng và combo.
             </p>
-            <a
-              href='/users'
-              className='text-indigo-600 font-medium hover:text-indigo-800 flex items-center'
+            <Link
+              to='/quan-ly-booking/them-moi'
+              className='text-amber-600 font-medium hover:text-amber-800 flex items-center'
             >
               Truy cập
               <svg
@@ -512,7 +517,7 @@ const HomePage = () => {
                   clipRule='evenodd'
                 />
               </svg>
-            </a>
+            </Link>
           </div>
 
           <div className='bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border border-gray-100'>
@@ -541,7 +546,7 @@ const HomePage = () => {
               Thêm, sửa, xóa các dịch vụ và cập nhật thông tin chi tiết.
             </p>
             <a
-              href='/services'
+              href='/quan-ly-dich-vu'
               className='text-green-600 font-medium hover:text-green-800 flex items-center'
             >
               Truy cập
@@ -562,7 +567,7 @@ const HomePage = () => {
 
           <div className='bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border border-gray-100'>
             <div className='flex items-center mb-4'>
-              <div className='p-3 rounded-full bg-amber-100 text-amber-600 mr-3'>
+              <div className='p-3 rounded-full bg-indigo-100 text-indigo-600 mr-3'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   className='h-6 w-6'
@@ -574,18 +579,20 @@ const HomePage = () => {
                     strokeLinecap='round'
                     strokeLinejoin='round'
                     strokeWidth={2}
-                    d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'
+                    d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'
                   />
                 </svg>
               </div>
-              <h3 className='text-lg font-semibold text-gray-800'>Lịch đặt</h3>
+              <h3 className='text-lg font-semibold text-gray-800'>
+                Quản lý phòng
+              </h3>
             </div>
             <p className='text-gray-600 mb-4'>
-              Xem và quản lý các lịch đặt dịch vụ, phòng và combo.
+              Xem và quản lý thông tin phòng. Có thể tạo lịch hẹn đặt phòng
             </p>
             <a
-              href='/bookings'
-              className='text-amber-600 font-medium hover:text-amber-800 flex items-center'
+              href='/quan-ly-nguoi-dung'
+              className='text-indigo-600 font-medium hover:text-indigo-800 flex items-center'
             >
               Truy cập
               <svg

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import CustomModal from '../common/CustomModal';
 import { Divider } from '@mui/material';
 import formatCurrency from '../../utils/formatCurrency';
@@ -20,6 +20,10 @@ const ViewComboDetailModal = ({ open, onClose, combo }) => {
   const comboVariants = useSelector(
     (state) => state.comboVariants.comboVariants
   );
+
+  const loggedInUser = useSelector((state) => state.auth.user);
+
+  const userRole = useMemo(() => loggedInUser?.staffType, [loggedInUser]);
 
   const [isAddVariantModalOpen, setIsAddVariantModalOpen] = useState(false);
 
@@ -181,12 +185,14 @@ const ViewComboDetailModal = ({ open, onClose, combo }) => {
               Các biến thể
             </h3>
 
-            <button
-              className='py-2 px-6 rounded-full bg-primary text-white cursor-pointer hover:bg-primary-dark'
-              onClick={handleOpenAddVariantModal}
-            >
-              + Thêm biến thể
-            </button>
+            {userRole === 'admin' && (
+              <button
+                className='py-2 px-6 rounded-full bg-primary text-white cursor-pointer hover:bg-primary-dark'
+                onClick={handleOpenAddVariantModal}
+              >
+                + Thêm biến thể
+              </button>
+            )}
           </div>
           <div className='grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4'>
             {comboVariants?.length > 0 ? (

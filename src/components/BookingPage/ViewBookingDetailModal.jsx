@@ -29,6 +29,7 @@ import MyAlrt from '../../configs/alert/MyAlrt';
 import { useEffect, useState } from 'react';
 import { updateStatus } from '../../redux/thunks/paymentThunk';
 import { getBookingStatuses } from '../../redux/thunks/bookingStatusThunk';
+import { getPaymentStatuses } from '../../redux/thunks/paymentStatusThunk';
 
 const paymentStatusColors = {
   'Chờ thanh toán': '#FFA500',
@@ -85,8 +86,10 @@ const ViewBookingDetailModal = ({ open, onClose, booking }) => {
     );
 
     if (!status) {
+      console.log('fail status', status);
       return;
     }
+    console.log('day ne');
 
     dispatch(
       updateBooking({
@@ -138,8 +141,6 @@ const ViewBookingDetailModal = ({ open, onClose, booking }) => {
 
   const handleChangeBookingStatus = (e) => {
     const bookingStatusId = getBookingStatusId(e.target.name);
-    console.log(e.target.name);
-    console.log(bookingStatusId);
 
     if (!bookingStatusId) {
       return;

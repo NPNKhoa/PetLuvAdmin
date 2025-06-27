@@ -114,12 +114,12 @@ const ViewPaymentDetailModal = ({ open, onClose, payment }) => {
             >
               <IoMdCheckmarkCircleOutline /> Đã thanh toán
             </button>
-            <button
+            {/* <button
               onClick={handleToggleCancelStatus}
               className={`mx-auto px-12 py-2 rounded-xl text-lg -mt-6 font-semibold w-full flex justify-center items-center gap-2 text-white bg-red-500 hover:bg-red-600`}
             >
               <MdOutlineCancel /> Thanh toán thất bại
-            </button>
+            </button> */}
           </div>
           <Grid container spacing={3} className='mt-8'>
             {/* Left Column - Basic Info */}

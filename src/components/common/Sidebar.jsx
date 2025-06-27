@@ -3,9 +3,14 @@ import { Link, useLocation } from 'react-router-dom';
 import { MdMenu } from 'react-icons/md';
 import sidebarItems from '../../configs/sidebarItems.jsx';
 import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const sidebarSpring = useSpring({ width: isOpen ? 250 : 80 });
+
+  const loggedInUser = useSelector((state) => state.auth.user);
+
+  const userRole = useMemo(() => loggedInUser?.staffType, [loggedInUser]);
 
   const location = useLocation();
 
@@ -24,13 +29,13 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           isOpen ? '-mt-4' : 'mt-2'
         }`}
       >
-        <div className='mx-auto'>
+        <Link to={'/'} className='mx-auto'>
           <img
             src='/logo.png'
             alt='PetLuv'
             className={`${isOpen ? 'md:w-24 sm:w-16' : 'md:w-32 sm:w-24'}`}
           />
-        </div>
+        </Link>
         <button
           onClick={toggleSidebar}
           className={`text-white ${isOpen ? '-mt-6' : 'ms-1'}`}
@@ -42,18 +47,36 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         </button>
       </div>
       <nav className='mt-10 flex flex-col gap-3 overflow-y-auto'>
-        {sidebarItems?.map((item, index) => (
-          <Link
-            key={index}
-            to={item.path}
-            className={`flex items-center gap-3 p-4 rounded-lg hover:bg-primary-dark transition-all ${
-              currentPage === item.name && 'bg-secondary'
-            }`}
-          >
-            {item.icon}
-            {isOpen && <span>{item.name}</span>}
-          </Link>
-        ))}
+        {sidebarItems?.map((item, index) => {
+          if (userRole !== 'admin') {
+            switch (item.path) {
+              case '/':
+                return;
+              case '/quan-ly-nguoi-dung':
+                return;
+              case '/quan-ly-thanh-toan':
+                return;
+              case '/quan-ly-danh-muc':
+                return;
+
+              default:
+                break;
+            }
+          }
+
+          return (
+            <Link
+              key={index}
+              to={item.path}
+              className={`flex items-center gap-3 p-4 rounded-lg hover:bg-primary-dark transition-all ${
+                currentPage === item.name && 'bg-secondary'
+              }`}
+            >
+              {item.icon}
+              {isOpen && <span>{item.name}</span>}
+            </Link>
+          );
+        })}
       </nav>
     </animated.aside>
   );

@@ -1,11 +1,14 @@
-import { Avatar } from '@mui/material';
+import { Avatar, Tooltip } from '@mui/material';
 import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import sidebarItems from '../../configs/sidebarItems';
-import DownArrow from '../../assets/icons/DownArrow.svg?react';
+import { FiLogOut } from 'react-icons/fi';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../redux/slices/authSlice';
 
 const Header = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const currentPage = useMemo(
     () => sidebarItems.find((item) => item.path === location.pathname)?.name,
@@ -20,7 +23,11 @@ const Header = () => {
         <span className='font-medium md:max-w-[8rem] truncate'>
           Nguyễn Khoa Admin
         </span>
-        <DownArrow className='w-4 h-4 hover:opacity-90 text-primary' />
+        <button onClick={() => dispatch(logout())}>
+          <Tooltip title='Đăng xuất'>
+            <FiLogOut className='w-4 h-4 hover:opacity-90 text-primary' />
+          </Tooltip>
+        </button>
       </div>
     </header>
   );

@@ -205,6 +205,7 @@ const BookingPageContainer = () => {
   };
 
   const handleViewDetail = (params) => {
+    dispatch(getPaymentStatuses());
     dispatch(setSelectedBooking(params.id));
     setViewModalOpen(true);
   };

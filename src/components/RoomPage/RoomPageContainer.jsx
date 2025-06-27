@@ -64,6 +64,10 @@ const columns = [
 const RoomPageContainer = () => {
   const dispatch = useDispatch();
 
+  const loggedInUser = useSelector((state) => state.auth.user);
+
+  const userRole = useMemo(() => loggedInUser?.staffType, [loggedInUser]);
+
   const rooms = useSelector((state) => state.rooms.rooms);
   const loading = useSelector((state) => state.rooms.loading);
 
@@ -188,26 +192,28 @@ const RoomPageContainer = () => {
           sx={{ width: '300px' }}
           InputProps={{ startAdornment: <Search sx={{ mr: 1 }} /> }}
         />
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <button
-            className='bg-primary rounded-lg px-9 py-3 text-white font-medium hover:bg-primary-dark'
-            onClick={handleAdd}
-          >
-            <Add /> Thêm
-          </button>
-          <button
-            className='bg-secondary-supper-light rounded-lg px-9 py-3 text-white font-medium hover:bg-secondary-light'
-            onClick={handleUpdate}
-          >
-            <Edit /> Cập nhật
-          </button>
-          <button
-            className='bg-red-600 rounded-lg px-9 py-3 text-white font-medium hover:bg-red-700'
-            onClick={handleDelete}
-          >
-            <Delete /> Xóa
-          </button>
-        </Box>
+        {userRole === 'admin' && (
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <button
+              className='bg-primary rounded-lg px-9 py-3 text-white font-medium hover:bg-primary-dark'
+              onClick={handleAdd}
+            >
+              <Add /> Thêm
+            </button>
+            <button
+              className='bg-secondary-supper-light rounded-lg px-9 py-3 text-white font-medium hover:bg-secondary-light'
+              onClick={handleUpdate}
+            >
+              <Edit /> Cập nhật
+            </button>
+            <button
+              className='bg-red-600 rounded-lg px-9 py-3 text-white font-medium hover:bg-red-700'
+              onClick={handleDelete}
+            >
+              <Delete /> Xóa
+            </button>
+          </Box>
+        )}
       </Box>
       {/* Data Table */}
       {loading ? (

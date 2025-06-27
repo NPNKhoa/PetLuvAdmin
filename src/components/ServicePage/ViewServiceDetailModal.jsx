@@ -30,6 +30,10 @@ import { useSelector } from 'react-redux';
 const ViewServiceDetailModal = ({ open, onClose, service }) => {
   const dispatch = useDispatch();
 
+  const loggedInUser = useSelector((state) => state.auth.user);
+
+  const userRole = useMemo(() => loggedInUser?.staffType, [loggedInUser]);
+
   const [showAddVariantModal, setShowAddVariantModal] = useState(false);
   const [showEditVariantModal, setShowEditVariantModal] = useState(false);
 
@@ -257,12 +261,14 @@ const ViewServiceDetailModal = ({ open, onClose, service }) => {
           <h2 className='font-cute text-primary tracking-wide text-xl mb-2'>
             Các biến thể
           </h2>
-          <button
-            onClick={handleOpenAddVariantModal}
-            className='bg-primary px-6 py-3 rounded-full text-white hover:text-tertiary-light hover:bg-primary-dark'
-          >
-            + Thêm biến thể
-          </button>
+          {userRole === 'admin' && (
+            <button
+              onClick={handleOpenAddVariantModal}
+              className='bg-primary px-6 py-3 rounded-full text-white hover:text-tertiary-light hover:bg-primary-dark'
+            >
+              + Thêm biến thể
+            </button>
+          )}
         </div>
 
         <div className='pt-2'>
@@ -306,20 +312,24 @@ const ViewServiceDetailModal = ({ open, onClose, service }) => {
                           )}
                         </p>
 
-                        <div>
-                          <IconButton
-                            color='info'
-                            onClick={() => handleOpenEditVariantModal(variant)}
-                          >
-                            <Edit />
-                          </IconButton>
-                          <IconButton
-                            color='error'
-                            onClick={() => handleDeleteVariant(variant)}
-                          >
-                            <Delete />
-                          </IconButton>
-                        </div>
+                        {userRole === 'admin' && (
+                          <div>
+                            <IconButton
+                              color='info'
+                              onClick={() =>
+                                handleOpenEditVariantModal(variant)
+                              }
+                            >
+                              <Edit />
+                            </IconButton>
+                            <IconButton
+                              color='error'
+                              onClick={() => handleDeleteVariant(variant)}
+                            >
+                              <Delete />
+                            </IconButton>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

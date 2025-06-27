@@ -53,7 +53,7 @@ class MyAlrt {
       customClass: this.customClass,
     }).then((result) => {
       if (result.isConfirmed) {
-        confirmResult();
+        confirmResult?.();
       }
     });
   }
@@ -74,7 +74,7 @@ class MyAlrt {
       customClass: this.customClass,
     }).then((result) => {
       if (result.isConfirmed) {
-        confirmResult();
+        confirmResult?.();
       }
     });
   }
@@ -95,7 +95,7 @@ class MyAlrt {
       customClass: this.customClass,
     }).then((result) => {
       if (result.isConfirmed) {
-        confirmResult();
+        confirmResult?.();
       }
     });
   }
@@ -116,7 +116,7 @@ class MyAlrt {
       customClass: this.customClass,
     }).then((result) => {
       if (result.isConfirmed) {
-        confirmResult();
+        confirmResult?.();
       }
     });
   }
@@ -137,7 +137,7 @@ class MyAlrt {
       customClass: this.customClass,
     }).then((result) => {
       if (result.isConfirmed) {
-        confirmResult();
+        confirmResult?.();
       }
     });
   }
